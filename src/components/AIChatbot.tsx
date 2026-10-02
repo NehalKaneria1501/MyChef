@@ -143,6 +143,42 @@ export default function AIChatbot() {
     });
   };
 
+  // Helper to render contextual action links and retry buttons
+  const renderMessageActions = (actions?: ChatAction[]) => {
+    if (!actions || actions.length === 0) return null;
+
+    return (
+      <div className="flex flex-wrap gap-1.5 pt-1.5 border-t border-stone-100">
+        {actions.map((act: ChatAction, idx: number) => {
+          if (act.url === '#retry') {
+            return (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => handleSendMessage(lastUserMessageRef.current)}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-[11px] transition-colors shadow-2xs cursor-pointer"
+              >
+                <span>{act.label}</span>
+              </button>
+            );
+          }
+          return (
+            <Link
+              key={idx}
+              href={act.url}
+              onClick={() => setIsOpen(false)}
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-orange-50 hover:bg-orange-100 text-orange-700 font-bold text-[11px] transition-colors border border-orange-200 shadow-2xs"
+            >
+              <span>{act.label}</span>
+              <ChevronRight className="w-3 h-3" />
+            </Link>
+          );
+        })}
+      </div>
+    );
+  };
+
+
   return (
     <>
       {/* Floating Launcher Button */}
@@ -245,34 +281,8 @@ export default function AIChatbot() {
                   </p>
 
                   {/* Contextual Action Buttons */}
-                  {msg.actions && msg.actions.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5 pt-1.5 border-t border-stone-100">
-                      {msg.actions.map((act, idx) => {
-                        if (act.url === '#retry') {
-                          return (
-                            <button
-                              key={idx}
-                              onClick={() => handleSendMessage(lastUserMessageRef.current)}
-                              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-bold text-[11px] transition-colors shadow-2xs cursor-pointer"
-                            >
-                              <span>{act.label}</span>
-                            </button>
-                          );
-                        }
-                        return (
-                          <Link
-                            key={idx}
-                            href={act.url}
-                            onClick={() => setIsOpen(false)}
-                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-orange-50 hover:bg-orange-100 text-orange-700 font-bold text-[11px] transition-colors border border-orange-200 shadow-2xs"
-                          >
-                            <span>{act.label}</span>
-                            <ChevronRight className="w-3 h-3" />
-                          </Link>
-                        );
-                      })}
-                    </div>
-                  )}
+                  {renderMessageActions(msg.actions)}
+
 
 
                   <span className={`text-[9px] block text-right font-medium ${msg.sender === 'user' ? 'text-orange-200' : 'text-stone-400'}`}>
