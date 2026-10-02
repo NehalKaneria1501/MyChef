@@ -1,9 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useApp } from '@/context/AppContext';
 import { MEMBERSHIP_PASSES } from '@/lib/mockData';
+import { 
+  trackViewItemList, 
+  trackSelectItem, 
+  EcommerceItem 
+} from '@/lib/analytics';
 import { 
   Sparkles, 
   Check, 
@@ -23,12 +28,37 @@ export default function MembershipPassesPage() {
   const { setCheckoutPlan, providers } = useApp();
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'quarterly'>('monthly');
 
+  // GA4 Ecommerce: view_item_list
+  useEffect(() => {
+    const items: EcommerceItem[] = MEMBERSHIP_PASSES.map((pass) => ({
+      item_id: pass.id,
+      item_name: pass.title,
+      item_category: 'Student & Corporate Pass',
+      item_variant: pass.targetAudience,
+      item_brand: 'MyChef Pass Loop',
+      price: pass.monthlyPrice,
+      quantity: 1,
+    }));
+    trackViewItemList(items, 'L_PASSES', 'Subscription Passes');
+  }, []);
+
   const handleSelectPass = (pass: typeof MEMBERSHIP_PASSES[0]) => {
     if (!providers.length) return;
     const provider = providers[0];
     const collection = provider.mealCollections[0];
 
     const price = billingCycle === 'monthly' ? pass.monthlyPrice : Math.round(pass.monthlyPrice * 3 * 0.9);
+
+    // GA4 Ecommerce: select_item
+    trackSelectItem({
+      item_id: pass.id,
+      item_name: pass.title,
+      item_category: 'Student & Corporate Pass',
+      item_variant: pass.targetAudience,
+      item_brand: 'MyChef Pass Loop',
+      price,
+      quantity: 1,
+    }, 'L_PASSES', 'Subscription Passes');
 
     setCheckoutPlan({
       provider,
@@ -46,6 +76,7 @@ export default function MembershipPassesPage() {
 
     router.push('/checkout');
   };
+
 
   const regionalSpecialPasses = [
     {

@@ -17,6 +17,13 @@ import {
   ShoppingBag, 
   UtensilsCrossed 
 } from 'lucide-react';
+import { 
+  trackBeginCheckout, 
+  trackAddPaymentInfo, 
+  trackPurchase, 
+  EcommerceItem 
+} from '@/lib/analytics';
+
 
 interface RazorpayResponse {
   razorpay_payment_id?: string;
@@ -81,6 +88,23 @@ export default function CheckoutPage() {
     };
   }, []);
 
+  // GA4 Ecommerce: begin_checkout
+  useEffect(() => {
+    if (checkoutPlan) {
+      const item: EcommerceItem = {
+        item_id: checkoutPlan.collection.id,
+        item_name: checkoutPlan.collection.name,
+        item_category: 'Meal Plan',
+        item_variant: checkoutPlan.planDuration,
+        item_brand: checkoutPlan.provider.name,
+        price: checkoutPlan.totalPrice,
+        quantity: 1,
+        cuisine: checkoutPlan.provider.cuisine?.join(', ') || 'Homestyle',
+      };
+      trackBeginCheckout([item], checkoutPlan.totalPrice);
+    }
+  }, [checkoutPlan]);
+
   // If no plan selected, redirect back to explore
   if (!checkoutPlan) {
     return (
@@ -105,7 +129,21 @@ export default function CheckoutPage() {
 
     const razorpayKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_test_xeVAJ5Jg2C932Q';
 
+    // GA4 Ecommerce: add_payment_info
+    const item: EcommerceItem = {
+      item_id: checkoutPlan.collection.id,
+      item_name: checkoutPlan.collection.name,
+      item_category: 'Meal Plan',
+      item_variant: checkoutPlan.planDuration,
+      item_brand: checkoutPlan.provider.name,
+      price: checkoutPlan.totalPrice,
+      quantity: 1,
+      cuisine: checkoutPlan.provider.cuisine?.join(', ') || 'Homestyle',
+    };
+    trackAddPaymentInfo([item], checkoutPlan.totalPrice, 'Razorpay');
+
     let orderId: string | undefined = undefined;
+
     try {
       const res = await fetch('/api/razorpay/create-order', {
         method: 'POST',
@@ -181,7 +219,26 @@ export default function CheckoutPage() {
     setPaymentSuccess(true);
     createSubscription(paymentId);
 
+    // GA4 Ecommerce: purchase
+    const item: EcommerceItem = {
+      item_id: checkoutPlan.collection.id,
+      item_name: checkoutPlan.collection.name,
+      item_category: 'Meal Plan',
+      item_variant: checkoutPlan.planDuration,
+      item_brand: checkoutPlan.provider.name,
+      price: checkoutPlan.totalPrice,
+      quantity: 1,
+      cuisine: checkoutPlan.provider.cuisine?.join(', ') || 'Homestyle',
+    };
+    trackPurchase({
+      transaction_id: paymentId,
+      value: checkoutPlan.totalPrice,
+      currency: 'INR',
+      items: [item],
+    });
+
     // Update live tracking order
+
     setLiveOrder({
       id: `ord-${Date.now().toString().slice(-4)}`,
       orderNumber: `MYCHEF-ORD-${Math.floor(1000 + Math.random() * 9000)}`,
