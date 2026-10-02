@@ -1,0 +1,8 @@
+# ==============================================================================
+# Alternative: Place this file as .htaccess in C:\xampp\htdocs\mychef\.htaccess
+# to access the site via http://localhost/mychef/
+# ==============================================================================
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ http://localhost:3000/$1 [P,L]

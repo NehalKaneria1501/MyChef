@@ -1,0 +1,153 @@
+{
+  "info": {
+    "_postman_id": "9b1a478c-3e61-4fae-9d8a-8d76e73c9901",
+    "name": "MyChef API Collection",
+    "description": "Complete Postman API Collection for MyChef Gourmet Loop platform including authentication, session verification, and role-based endpoints.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication & Session",
+      "item": [
+        {
+          "name": "1. Login (Consumer Mode)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"emailOrPhone\": \"priya.sharma@gmail.com\",\n  \"password\": \"Password123!\",\n  \"role\": \"consumer\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Authenticate as a Consumer to browse local kitchens, meal passes, and manage tiffin subscriptions."
+          },
+          "response": []
+        },
+        {
+          "name": "2. Login (Kitchen Partner)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"emailOrPhone\": \"chef.rasoi@mychef.in\",\n  \"password\": \"KitchenPass2026!\",\n  \"role\": \"provider\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Authenticate as a Kitchen Partner to manage daily dispatch, weekly menus, and FSSAI hygiene checklists."
+          },
+          "response": []
+        },
+        {
+          "name": "3. Login (Platform Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"emailOrPhone\": \"admin@mychef.in\",\n  \"password\": \"AdminSuperSecure99\",\n  \"role\": \"admin\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Authenticate as Platform Admin for Razorpay auto-debit triggers, pincode routing, and audit logs."
+          },
+          "response": []
+        },
+        {
+          "name": "4. Get Current User Session (me)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "me"]
+            },
+            "description": "Retrieves the currently authenticated user from the HTTP-only cookie session."
+          },
+          "response": []
+        },
+        {
+          "name": "5. Logout (Clear Session)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "logout"]
+            },
+            "description": "Terminates the session and removes the HTTP-only session cookie."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Health Check & App Root",
+      "item": [
+        {
+          "name": "Homepage Status (Web Root)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": ["{{baseUrl}}"],
+              "path": [""]
+            },
+            "description": "Check if the Next.js server is actively serving the homepage."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
