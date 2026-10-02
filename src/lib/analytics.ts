@@ -76,6 +76,44 @@ export async function logAnalyticsEvent(eventName: string, params: Record<string
   } catch (err) {
     console.debug(`Analytics logEvent error for ${eventName}:`, err);
   }
+
+  // 3. Dispatch to Meta Pixel (fbq) if present
+  try {
+    const fbq = (window as any).fbq;
+    if (typeof fbq === 'function') {
+      if (eventName === 'purchase') {
+        fbq('track', 'Purchase', { value: params.value, currency: params.currency || 'INR' });
+      } else if (eventName === 'add_to_cart') {
+        fbq('track', 'AddToCart', { value: params.value, currency: params.currency || 'INR' });
+      } else if (eventName === 'begin_checkout') {
+        fbq('track', 'InitiateCheckout', { value: params.value, currency: params.currency || 'INR' });
+      } else if (eventName === 'view_item') {
+        fbq('track', 'ViewContent', { value: params.value, currency: params.currency || 'INR' });
+      } else if (eventName === 'sign_up') {
+        fbq('track', 'CompleteRegistration');
+      }
+    }
+  } catch (err) {
+    console.debug('Meta Pixel dispatch error:', err);
+  }
+
+  // 4. Dispatch to TikTok Pixel (ttq) if present
+  try {
+    const ttq = (window as any).ttq;
+    if (ttq && typeof ttq.track === 'function') {
+      if (eventName === 'purchase') {
+        ttq.track('CompletePayment', { value: params.value, currency: params.currency || 'INR' });
+      } else if (eventName === 'add_to_cart') {
+        ttq.track('AddToCart', { value: params.value, currency: params.currency || 'INR' });
+      } else if (eventName === 'begin_checkout') {
+        ttq.track('InitiateCheckout', { value: params.value, currency: params.currency || 'INR' });
+      } else if (eventName === 'view_item') {
+        ttq.track('ViewContent', { value: params.value, currency: params.currency || 'INR' });
+      }
+    }
+  } catch (err) {
+    console.debug('TikTok Pixel dispatch error:', err);
+  }
 }
 
 /**
