@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from 'next';
-import { Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 import { AppProvider } from '@/context/AppContext';
 import Navbar from '@/components/Navbar';
@@ -8,12 +7,6 @@ import AIChatbot from '@/components/AIChatbot';
 import AnalyticsProvider from '@/components/AnalyticsProvider';
 import React, { Suspense } from 'react';
 import Script from 'next/script';
-
-const plusJakartaSans = Plus_Jakarta_Sans({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800'],
-  display: 'swap',
-});
 
 export const viewport: Viewport = {
   themeColor: '#ea580c',
@@ -129,10 +122,17 @@ export default function RootLayout({
             }}
           />
         )}
+        {/* Google Fonts - Plus Jakarta Sans */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet"
+        />
       </head>
       <body
         suppressHydrationWarning
-        className={`${ plusJakartaSans.className } min-h-screen flex flex-col antialiased selection:bg-orange-600 selection:text-white`}
+        className="min-h-screen flex flex-col antialiased selection:bg-orange-600 selection:text-white font-sans"
       >
         {/* GTM noscript fallback */}
         {gtmId && (
