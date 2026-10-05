@@ -21,7 +21,12 @@ import {
   MessageSquare,
   PartyPopper,
   Award,
-  Briefcase
+  Briefcase,
+  Crown,
+  ShoppingBag,
+  Sparkles,
+  Clock,
+  Compass
 } from 'lucide-react';
 
 export default function Navbar() {
@@ -96,32 +101,174 @@ export default function Navbar() {
 
           {/* Desktop Navigation Links */}
           <nav className="hidden lg:flex items-center gap-1 xl:gap-1.5 shrink min-w-0">
-            <Link
-              href="/explore"
-              className={`flex items-center gap-1.5 px-3 py-1.5 xl:py-2 rounded-xl text-[11px] xl:text-xs font-black transition-all whitespace-nowrap ${
-                pathname === '/explore'
-                  ? 'text-orange-600 bg-orange-50 border border-orange-200 shadow-2xs'
-                  : 'text-stone-700 hover:text-orange-600 hover:bg-stone-50'
-              }`}
-            >
-              <ChefHat className="w-3.5 h-3.5 text-orange-600 shrink-0" />
-              <span>Local Kitchens</span>
-            </Link>
+            {/* Local Kitchens Dropdown Button */}
+            <div className="relative group">
+              <Link
+                href="/explore"
+                className={`flex items-center gap-1.5 px-3 py-1.5 xl:py-2 rounded-xl text-[11px] xl:text-xs font-black transition-all whitespace-nowrap cursor-pointer ${
+                  pathname === '/explore'
+                    ? 'text-orange-600 bg-orange-50 border border-orange-200 shadow-2xs'
+                    : 'text-stone-700 hover:text-orange-600 hover:bg-stone-50'
+                }`}
+              >
+                <ChefHat className="w-3.5 h-3.5 text-orange-600 shrink-0" />
+                <span>Local Kitchens</span>
+                <ChevronDown className="w-3 h-3 text-stone-400 group-hover:text-orange-600 transition-transform group-hover:rotate-180" />
+              </Link>
 
-            <Link
-              href="/passes"
-              className={`flex items-center gap-1.5 px-3 py-1.5 xl:py-2 rounded-xl text-[11px] xl:text-xs font-black transition-all whitespace-nowrap ${
-                pathname === '/passes'
-                  ? 'text-amber-800 bg-amber-50 border border-amber-200 shadow-2xs'
-                  : 'text-stone-700 hover:text-amber-700 hover:bg-amber-50/60'
-              }`}
-            >
-              <GraduationCap className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-              <span>PG Mess</span>
-              <span className="px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-900 font-black text-[9px] border border-amber-300">
-                ₹84/meal
-              </span>
-            </Link>
+              {/* Hover Dropdown Menu */}
+              <div className="absolute top-full left-0 pt-1.5 w-76 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="p-2 bg-white rounded-2xl shadow-xl border border-stone-200/90 backdrop-blur-md">
+                  <div className="px-3 py-1.5 border-b border-stone-100 text-[10px] font-black uppercase text-stone-400 tracking-wider flex items-center justify-between">
+                    <span>Neighborhood Kitchens</span>
+                    <Link href="/explore" className="text-orange-600 hover:underline">Explore All →</Link>
+                  </div>
+                  <div className="space-y-0.5 pt-1.5">
+                    <Link
+                      href="/explore"
+                      className="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-orange-50 text-stone-700 hover:text-orange-700 text-xs font-bold transition-colors group/item"
+                    >
+                      <span className="flex items-center gap-2">
+                        <Compass className="w-3.5 h-3.5 text-orange-500" />
+                        <span>Browse All 60+ Kitchens</span>
+                      </span>
+                      <span className="text-[10px] font-black text-orange-600 bg-orange-100/80 px-1.5 py-0.5 rounded-md">Live</span>
+                    </Link>
+                    <Link
+                      href="/explore?category=home_chef"
+                      className="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-orange-50 text-stone-700 hover:text-orange-700 text-xs font-bold transition-colors group/item"
+                    >
+                      <span className="flex items-center gap-2">
+                        <ChefHat className="w-3.5 h-3.5 text-orange-500" />
+                        <span>Homestyle Home Chefs</span>
+                      </span>
+                      <span className="text-[10px] text-stone-400 font-semibold">Homecooked</span>
+                    </Link>
+                    <Link
+                      href="/explore?star=7_star"
+                      className="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-amber-50 text-stone-700 hover:text-amber-700 text-xs font-bold transition-colors group/item"
+                    >
+                      <span className="flex items-center gap-2">
+                        <Crown className="w-3.5 h-3.5 text-amber-500" />
+                        <span>7★ Royal Heritage Dining</span>
+                      </span>
+                      <span className="text-[10px] font-black text-amber-800 bg-amber-100 px-1.5 py-0.5 rounded-md">VIP</span>
+                    </Link>
+                    <Link
+                      href="/explore?fulfillment=delivery"
+                      className="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-emerald-50 text-stone-700 hover:text-emerald-700 text-xs font-bold transition-colors group/item"
+                    >
+                      <span className="flex items-center gap-2">
+                        <Bike className="w-3.5 h-3.5 text-emerald-500" />
+                        <span>Doorstep Hot Delivery</span>
+                      </span>
+                      <span className="text-[10px] text-emerald-600 font-bold">Hot Box</span>
+                    </Link>
+                    <Link
+                      href="/explore?fulfillment=parcel_locker"
+                      className="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-blue-50 text-stone-700 hover:text-blue-700 text-xs font-bold transition-colors group/item"
+                    >
+                      <span className="flex items-center gap-2">
+                        <ShoppingBag className="w-3.5 h-3.5 text-blue-500" />
+                        <span>Smart Parcel Lockers</span>
+                      </span>
+                      <span className="text-[10px] font-black text-blue-600 bg-blue-100/80 px-1.5 py-0.5 rounded-md">Free</span>
+                    </Link>
+                    <Link
+                      href="/explore?diet=pure-veg"
+                      className="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-emerald-50 text-stone-700 hover:text-emerald-700 text-xs font-bold transition-colors group/item"
+                    >
+                      <span className="flex items-center gap-2">
+                        <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+                        <span>Pure Veg & Jain Thalis</span>
+                      </span>
+                      <span className="text-[10px] text-emerald-700 font-black">100% Satvik</span>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* PG Mess Dropdown Button */}
+            <div className="relative group">
+              <Link
+                href="/passes"
+                className={`flex items-center gap-1.5 px-3 py-1.5 xl:py-2 rounded-xl text-[11px] xl:text-xs font-black transition-all whitespace-nowrap cursor-pointer ${
+                  pathname.startsWith('/passes')
+                    ? 'text-amber-800 bg-amber-50 border border-amber-200 shadow-2xs'
+                    : 'text-stone-700 hover:text-amber-700 hover:bg-amber-50/60'
+                }`}
+              >
+                <GraduationCap className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                <span>PG Mess</span>
+                <span className="px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-900 font-black text-[9px] border border-amber-300">
+                  ₹84/meal
+                </span>
+                <ChevronDown className="w-3 h-3 text-stone-400 group-hover:text-amber-600 transition-transform group-hover:rotate-180" />
+              </Link>
+
+              {/* Hover Dropdown Menu */}
+              <div className="absolute top-full left-0 pt-1.5 w-76 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="p-2 bg-white rounded-2xl shadow-xl border border-stone-200/90 backdrop-blur-md">
+                  <div className="px-3 py-1.5 border-b border-stone-100 text-[10px] font-black uppercase text-stone-400 tracking-wider flex items-center justify-between">
+                    <span>Student & PG Meal Plans</span>
+                    <Link href="/passes" className="text-amber-600 hover:underline">View Passes →</Link>
+                  </div>
+                  <div className="space-y-0.5 pt-1.5">
+                    <Link
+                      href="/passes"
+                      className="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-amber-50 text-stone-700 hover:text-amber-700 text-xs font-bold transition-colors group/item"
+                    >
+                      <span className="flex items-center gap-2">
+                        <GraduationCap className="w-3.5 h-3.5 text-amber-500" />
+                        <span>Student Meal Passes</span>
+                      </span>
+                      <span className="text-[10px] font-black text-amber-800 bg-amber-100 px-1.5 py-0.5 rounded-md">From ₹84</span>
+                    </Link>
+                    <Link
+                      href="/explore?category=student_mess"
+                      className="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-amber-50 text-stone-700 hover:text-amber-700 text-xs font-bold transition-colors group/item"
+                    >
+                      <span className="flex items-center gap-2">
+                        <Building2 className="w-3.5 h-3.5 text-amber-500" />
+                        <span>Campus Mess Directory</span>
+                      </span>
+                      <span className="text-[10px] text-stone-400 font-semibold">Near PGs</span>
+                    </Link>
+                    <Link
+                      href="/explore?fulfillment=dine_in"
+                      className="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-purple-50 text-stone-700 hover:text-purple-700 text-xs font-bold transition-colors group/item"
+                    >
+                      <span className="flex items-center gap-2">
+                        <UtensilsCrossed className="w-3.5 h-3.5 text-purple-500" />
+                        <span>Mess Dine-In Canteens</span>
+                      </span>
+                      <span className="text-[10px] text-purple-600 font-bold">Unlimited Rotis</span>
+                    </Link>
+                    <Link
+                      href="/passes"
+                      className="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-amber-50 text-stone-700 hover:text-amber-700 text-xs font-bold transition-colors group/item"
+                    >
+                      <span className="flex items-center gap-2">
+                        <Clock className="w-3.5 h-3.5 text-amber-600" />
+                        <span>Exam Season Late Night Tiffins</span>
+                      </span>
+                      <span className="text-[10px] font-bold text-amber-700">Till 11 PM</span>
+                    </Link>
+                    <Link
+                      href="/contact?category=student_mess"
+                      className="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-orange-50 text-stone-700 hover:text-orange-700 text-xs font-bold transition-colors group/item"
+                    >
+                      <span className="flex items-center gap-2">
+                        <MessageSquare className="w-3.5 h-3.5 text-orange-500" />
+                        <span>Hostel / PG Mess Tie-Up</span>
+                      </span>
+                      <span className="text-[10px] text-orange-600 font-black">Inquire →</span>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
 
             <div className="relative group">
               <Link
