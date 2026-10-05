@@ -7,8 +7,7 @@ import {
   Zap,
   CalendarCheck,
   MessageSquare,
-  Compass,
-  PartyPopper
+  Compass
 } from 'lucide-react';
 
 export default function Footer() {
@@ -165,11 +164,11 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Admin & Events */}
+          {/* Platform Admin */}
           <div>
             <div className="flex items-center gap-1.5 mb-3 text-white">
               <ShieldCheck className="w-4 h-4 text-blue-500" />
-              <h4 className="text-xs font-black uppercase tracking-wider">Admin & Catering</h4>
+              <h4 className="text-xs font-black uppercase tracking-wider">Platform Admin</h4>
             </div>
             <ul className="space-y-2 text-xs text-stone-400">
               <li>
@@ -194,19 +193,13 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/events" className="hover:text-emerald-400 transition-colors font-medium flex items-center gap-1 pt-1.5 border-t border-stone-800">
-                  <PartyPopper className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-                  <span>Events & Catering Hub</span>
+                <Link href="/provider/dashboard" className="hover:text-blue-400 transition-colors font-medium">
+                  Kitchen Operations & Dispatch
                 </Link>
               </li>
               <li>
-                <Link href="/events?type=birthday" className="hover:text-emerald-400 transition-colors font-medium text-[11px]">
-                  • Birthday & Family Feasts
-                </Link>
-              </li>
-              <li>
-                <Link href="/events?type=office" className="hover:text-emerald-400 transition-colors font-medium text-[11px]">
-                  • Office & Team Lunch Boxes
+                <Link href="/admin" className="hover:text-blue-400 transition-colors font-medium">
+                  System Health & Ticket SLAs
                 </Link>
               </li>
             </ul>

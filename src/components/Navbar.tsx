@@ -359,45 +359,10 @@ export default function Navbar() {
               <span>Live Tracking</span>
             </Link>
 
-            <Link
-              href="/consumer/subscriptions"
-              className={`flex items-center gap-1 px-2.5 xl:px-3 py-1.5 xl:py-2 rounded-xl text-[11px] xl:text-xs font-extrabold transition-colors whitespace-nowrap ${
-                pathname.startsWith('/consumer/subscriptions')
-                  ? 'text-orange-600 bg-orange-50'
-                  : 'text-stone-700 hover:text-orange-600 hover:bg-stone-50'
-              }`}
-            >
-              <CalendarCheck className="w-3.5 h-3.5 text-stone-400 shrink-0" />
-              <span>Subscriptions</span>
-            </Link>
-
-            <Link
-              href="/contact"
-              className={`flex items-center gap-1 px-2.5 xl:px-3 py-1.5 xl:py-2 rounded-xl text-[11px] xl:text-xs font-extrabold transition-colors whitespace-nowrap ${
-                pathname === '/contact'
-                  ? 'text-orange-600 bg-orange-50 border border-orange-200 shadow-2xs'
-                  : 'text-stone-700 hover:text-orange-600 hover:bg-stone-50'
-              }`}
-            >
-              <MessageSquare className="w-3.5 h-3.5 text-orange-500 shrink-0" />
-              <span>Contact & Inquiries</span>
-            </Link>
           </nav>
 
-          {/* Action Group: Dedicated Admin Button + User Profile / Sign In */}
+          {/* Action Group: User Profile / Sign In */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0 ml-auto lg:ml-0">
-            {/* Dedicated Animated Admin Button */}
-            <Link
-              href="/admin"
-              onClick={() => setRole('admin')}
-              className={`flex items-center gap-1.5 h-9 px-3.5 rounded-xl btn-animated-admin text-xs font-black text-white transition-all shadow-xs shrink-0 cursor-pointer ${
-                pathname.startsWith('/admin') ? 'ring-2 ring-blue-300 ring-offset-1' : ''
-              }`}
-              title="Platform Admin Console"
-            >
-              <ShieldCheck className="w-3.5 h-3.5 text-blue-100 shrink-0" />
-              <span>Admin</span>
-            </Link>
 
             {/* User Profile / Sign In */}
             {user ? (
@@ -537,21 +502,6 @@ export default function Navbar() {
         >
           <Bike className="w-3.5 h-3.5 text-orange-600" />
           <span>Track</span>
-        </Link>
-        <Link
-          href="/contact"
-          className="flex items-center gap-1 px-2 py-1 rounded-xl bg-white border border-orange-200 text-orange-700 font-extrabold text-[11px] shrink-0 active:scale-95 transition-all shadow-2xs"
-        >
-          <MessageSquare className="w-3.5 h-3.5 text-orange-600" />
-          <span>Inquiry</span>
-        </Link>
-        <Link
-          href="/admin"
-          onClick={() => setRole('admin')}
-          className="flex items-center gap-1 px-2.5 py-1 rounded-xl btn-animated-admin text-white font-black text-[11px] shrink-0 active:scale-95 transition-all shadow-2xs"
-        >
-          <ShieldCheck className="w-3.5 h-3.5 text-blue-100" />
-          <span>Admin</span>
         </Link>
       </div>
       </header>
