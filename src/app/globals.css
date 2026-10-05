@@ -347,3 +347,44 @@ body {
   box-shadow: 0 8px 20px -3px rgba(234, 88, 12, 0.55);
 }
 
+/* Ambient Foodie & Colorful Leaf Floating Animations */
+@keyframes leafFloatSlow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg) scale(1);
+  }
+  50% {
+    transform: translateY(-10px) rotate(6deg) scale(1.06);
+  }
+}
+
+@keyframes leafFloatReverse {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg) scale(1);
+  }
+  50% {
+    transform: translateY(-12px) rotate(-7deg) scale(1.05);
+  }
+}
+
+@keyframes emojiPulseSlow {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-8px) scale(1.12);
+  }
+}
+
+.animate-leaf-float {
+  animation: leafFloatSlow 7s ease-in-out infinite;
+}
+
+.animate-leaf-reverse {
+  animation: leafFloatReverse 8.5s ease-in-out infinite;
+}
+
+.animate-emoji-pulse {
+  animation: emojiPulseSlow 6s ease-in-out infinite;
+}
+
+

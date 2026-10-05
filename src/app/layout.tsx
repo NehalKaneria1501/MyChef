@@ -5,6 +5,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import AIChatbot from '@/components/AIChatbot';
 import AnalyticsProvider from '@/components/AnalyticsProvider';
+import FoodieBackgroundDeco from '@/components/FoodieBackgroundDeco';
 import React, { Suspense } from 'react';
 import Script from 'next/script';
 
@@ -147,11 +148,13 @@ export default function RootLayout({
         )}
 
         <AppProvider>
+          {/* Ambient Colorful Leaves & Foodie Emojis for Body Background */}
+          <FoodieBackgroundDeco />
           <Suspense fallback={null}>
             <AnalyticsProvider />
           </Suspense>
           <Navbar />
-          <main className="flex-1 w-full animate-fade-in-up" id="main-content">
+          <main className="flex-1 w-full animate-fade-in-up relative z-10" id="main-content">
             {children}
           </main>
           <Footer />
