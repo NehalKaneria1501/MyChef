@@ -73,41 +73,41 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Portals & System Hubs (Admin & Platform) */}
+          {/* Browsing Routes & Discovery */}
           <div>
             <div className="flex items-center gap-1.5 mb-3 text-white">
-              <Layers className="w-4 h-4 text-blue-500" />
-              <h4 className="text-xs font-black uppercase tracking-wider">Portals & Hubs</h4>
+              <Layers className="w-4 h-4 text-orange-500" />
+              <h4 className="text-xs font-black uppercase tracking-wider">Browsing Routes</h4>
             </div>
             <ul className="space-y-2 text-xs text-stone-400">
               <li>
-                <Link href="/contact" className="text-orange-400 font-bold hover:text-orange-300 transition-colors flex items-center gap-1">
-                  <span>Contact Us & Inquiry Desk</span>
+                <Link href="/explore" className="text-orange-400 font-bold hover:text-orange-300 transition-colors flex items-center gap-1">
+                  <span>Explore All Kitchens</span>
                   <span>→</span>
                 </Link>
               </li>
               <li>
-                <Link href="/admin" className="hover:text-blue-400 transition-colors font-medium">
-                  Platform Admin Console
+                <Link href="/explore?fulfillment=delivery" className="hover:text-orange-400 transition-colors font-medium">
+                  Doorstep Delivery Route
                 </Link>
               </li>
               <li>
-                <Link href="/admin" className="hover:text-blue-400 transition-colors font-medium">
-                  Razorpay Auto-Debit Flow
+                <Link href="/explore?fulfillment=parcel_locker" className="hover:text-orange-400 transition-colors font-medium">
+                  Smart Parcel Locker Pickup
                 </Link>
               </li>
               <li>
-                <Link href="/admin" className="hover:text-blue-400 transition-colors font-medium">
-                  Pincode Routing Engine
+                <Link href="/explore?fulfillment=dine_in" className="hover:text-orange-400 transition-colors font-medium">
+                  Campus Mess Dine-In Route
                 </Link>
               </li>
               <li>
-                <Link href="/admin" className="hover:text-blue-400 transition-colors font-medium">
-                  Support & Ticket Desk
+                <Link href="/contact" className="hover:text-white transition-colors font-medium">
+                  Inquiry & Contact Concierge
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-blue-400 transition-colors font-medium">
+                <Link href="/contact?category=corporate" className="hover:text-white transition-colors font-medium">
                   Corporate Partnership RFP
                 </Link>
               </li>

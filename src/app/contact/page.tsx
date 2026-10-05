@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useId } from 'react';
+import React, { useState, useId, useEffect, Suspense } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { useApp } from '@/context/AppContext';
 import { CITIES_AND_HUBS } from '@/lib/cities';
 import { InquiryCategory } from '@/lib/types';
@@ -28,7 +29,10 @@ import {
   Check,
   Zap,
   Info,
-  ExternalLink
+  ExternalLink,
+  Compass,
+  Bike,
+  ShoppingBag
 } from 'lucide-react';
 
 interface InquiryFormState {
@@ -139,8 +143,9 @@ const FAQS = [
   },
 ];
 
-export default function ContactAndInquiryPage() {
+function ContactContent() {
   const { city: userCity, addInquiry, user } = useApp();
+  const searchParams = useSearchParams();
 
   const [formData, setFormData] = useState<InquiryFormState>({
     category: 'corporate',
@@ -167,11 +172,51 @@ export default function ContactAndInquiryPage() {
 
   const formSectionId = useId();
 
+  // Handle URL query parameters to preselect category and prefill values
+  useEffect(() => {
+    const categoryParam = searchParams.get('category') as InquiryCategory | null;
+    const subjectParam = searchParams.get('subject');
+    const mealsParam = searchParams.get('meals');
+    const cityParam = searchParams.get('city');
+    const routeParam = searchParams.get('route');
+
+    setFormData((prev) => {
+      const nextCategory = categoryParam && CATEGORIES.some(c => c.id === categoryParam)
+        ? categoryParam
+        : prev.category;
+
+      let nextSubject = prev.subject;
+      if (subjectParam) {
+        nextSubject = subjectParam;
+      } else if (routeParam) {
+        nextSubject = `Delivery Route Inquiry for ${routeParam}`;
+      } else if (!nextSubject) {
+        nextSubject = nextCategory === 'corporate'
+          ? 'Corporate Daily Meal Subscription Inquiry'
+          : nextCategory === 'student_mess'
+          ? 'Hostel / PG Student Mess Tie-up Inquiry'
+          : nextCategory === 'chef_partner'
+          ? 'Home Chef Partnership & Onboarding Inquiry'
+          : nextCategory === 'event_catering'
+          ? 'Special Event Feast / Party Catering Inquiry'
+          : 'Customer Support / General Assistance';
+      }
+
+      return {
+        ...prev,
+        category: nextCategory,
+        subject: nextSubject,
+        estimatedMealsCount: mealsParam || prev.estimatedMealsCount,
+        city: cityParam || prev.city,
+        message: routeParam ? `Inquiring about meal delivery schedule and coverage for the ${routeParam} route.` : prev.message,
+      };
+    });
+  }, [searchParams]);
+
   const handleCategorySelect = (category: InquiryCategory) => {
     setFormData((prev) => ({
       ...prev,
       category,
-      // Provide intelligent default subject when category switches
       subject:
         category === 'corporate'
           ? 'Corporate Daily Meal Subscription Inquiry'
@@ -213,6 +258,7 @@ export default function ContactAndInquiryPage() {
 
     setIsSubmitting(true);
     try {
+      // 1. Submit to AppContext / Internal API endpoint
       const result = await addInquiry({
         category: formData.category,
         fullName: formData.fullName.trim(),
@@ -230,9 +276,37 @@ export default function ContactAndInquiryPage() {
         message: formData.message.trim(),
       });
 
+      // 2. Submit to Netlify Forms (so submissions are logged in Netlify Forms Dashboard on mytiffin.netlify.app)
+      try {
+        const netlifyFormData = new URLSearchParams();
+        netlifyFormData.append('form-name', 'contact-inquiry');
+        netlifyFormData.append('category', formData.category);
+        netlifyFormData.append('fullName', formData.fullName.trim());
+        netlifyFormData.append('email', formData.email.trim());
+        netlifyFormData.append('phone', formData.phone.trim());
+        netlifyFormData.append('city', formData.city.trim());
+        netlifyFormData.append('pincode', formData.pincode.trim());
+        netlifyFormData.append('organizationName', formData.organizationName.trim());
+        netlifyFormData.append('estimatedMealsCount', formData.estimatedMealsCount);
+        netlifyFormData.append('dietaryPreference', formData.dietaryPreference);
+        netlifyFormData.append('startDate', formData.startDate);
+        netlifyFormData.append('kitchenType', formData.kitchenType || '');
+        netlifyFormData.append('hasFssai', formData.hasFssai || '');
+        netlifyFormData.append('subject', formData.subject.trim());
+        netlifyFormData.append('message', formData.message.trim());
+
+        await fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: netlifyFormData.toString(),
+        });
+      } catch (err) {
+        // Non-fatal, AppContext has already stored the lead
+        console.warn('Netlify form post notice:', err);
+      }
+
       if (result.success) {
         setSubmittedInquiryId(result.inquiryId);
-        // Scroll smoothly to top of form section
         const el = document.getElementById(formSectionId);
         if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
@@ -279,7 +353,6 @@ export default function ContactAndInquiryPage() {
     <div className="min-h-screen bg-stone-50 text-stone-900 pb-20">
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-linear-to-b from-orange-950 via-stone-900 to-stone-900 text-white pt-12 pb-20 sm:pt-16 sm:pb-28">
-        {/* Ambient background glows */}
         <div className="absolute top-0 left-1/4 -translate-x-1/2 w-96 h-96 bg-orange-600/20 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute top-10 right-10 w-80 h-80 bg-amber-500/15 rounded-full blur-3xl pointer-events-none" />
 
@@ -315,7 +388,7 @@ export default function ContactAndInquiryPage() {
             </div>
           </div>
 
-          {/* Quick Direct Channel Cards */}
+          {/* Direct Channels Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-12">
             {/* WhatsApp Direct */}
             <a
@@ -388,7 +461,7 @@ export default function ContactAndInquiryPage() {
               </div>
             </a>
 
-            {/* Hub Central Office */}
+            {/* Central Operations Hub */}
             <div className="p-5 rounded-2xl bg-white/5 border border-white/10 flex flex-col justify-between">
               <div className="space-y-3">
                 <div className="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center">
@@ -409,14 +482,36 @@ export default function ContactAndInquiryPage() {
               </div>
             </div>
           </div>
+
+          {/* Quick Route Discovery Banner */}
+          <div className="mt-8 p-4 rounded-2xl bg-linear-to-r from-orange-600/30 via-amber-600/20 to-stone-800/40 border border-orange-500/30 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-orange-500/30 text-orange-300 flex items-center justify-center shrink-0">
+                <Compass className="w-5 h-5" />
+              </div>
+              <div>
+                <h4 className="text-sm font-black text-white">Looking to browse daily tiffins & meal delivery routes?</h4>
+                <p className="text-xs text-stone-300">
+                  Explore 60+ verified home kitchens, campus student messes, and smart parcel lockers on our Browsing Route.
+                </p>
+              </div>
+            </div>
+            <Link
+              href="/explore"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-black text-xs transition-colors shrink-0 shadow-md"
+            >
+              <span>Explore Browsing Route</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* Main Form & Interactive Center Section */}
+      {/* Main Form Section */}
       <section id={formSectionId} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 sm:-mt-12 relative z-10">
         <div className="bg-white rounded-3xl shadow-xl border border-stone-200 overflow-hidden">
           
-          {/* Form Header Tabs: Inquiry Type Selector */}
+          {/* Step 1: Category Selector */}
           <div className="p-4 sm:p-6 lg:p-8 border-b border-stone-100 bg-stone-50/80">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
               <div>
@@ -429,7 +524,7 @@ export default function ContactAndInquiryPage() {
               </div>
               <span className="text-xs font-medium text-stone-500 flex items-center gap-1">
                 <Info className="w-3.5 h-3.5 text-stone-400" />
-                Select a tab to load relevant details
+                Select a tab to customize form fields
               </span>
             </div>
 
@@ -488,10 +583,10 @@ export default function ContactAndInquiryPage() {
             </div>
           </div>
 
-          {/* Form Content / Success Confirmation View */}
+          {/* Form Content / Success Confirmation */}
           <div className="p-4 sm:p-6 lg:p-10">
             {submittedInquiryId ? (
-              /* Success State Screen */
+              /* Success Confirmation */
               <div className="max-w-2xl mx-auto py-8 sm:py-12 text-center space-y-6 animate-in fade-in zoom-in-95 duration-300">
                 <div className="w-20 h-20 rounded-full bg-emerald-100 border-4 border-emerald-50 text-emerald-600 flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/20">
                   <CheckCircle2 className="w-10 h-10" />
@@ -575,8 +670,23 @@ export default function ContactAndInquiryPage() {
                 </div>
               </div>
             ) : (
-              /* Active Inquiry Form */
-              <form onSubmit={handleSubmit} className="space-y-8">
+              /* Active Inquiry Form with Netlify Support */
+              <form
+                name="contact-inquiry"
+                method="POST"
+                data-netlify="true"
+                netlify-honeypot="bot-field"
+                onSubmit={handleSubmit}
+                className="space-y-8"
+              >
+                {/* Netlify Hidden Form Detection Fields */}
+                <input type="hidden" name="form-name" value="contact-inquiry" />
+                <p className="hidden">
+                  <label>
+                    Don’t fill this out if you're human: <input name="bot-field" />
+                  </label>
+                </p>
+                <input type="hidden" name="category" value={formData.category} />
                 
                 {/* Active Category Description Banner */}
                 <div className="p-4 rounded-2xl bg-orange-50/60 border border-orange-200/70 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -608,6 +718,7 @@ export default function ContactAndInquiryPage() {
                     </label>
                     <input
                       type="text"
+                      name="fullName"
                       required
                       placeholder="e.g. Dr. Aryan Patel / Priya Sharma"
                       value={formData.fullName}
@@ -630,6 +741,7 @@ export default function ContactAndInquiryPage() {
                     </label>
                     <input
                       type="email"
+                      name="email"
                       required
                       placeholder="name@company.com or gmail.com"
                       value={formData.email}
@@ -656,6 +768,7 @@ export default function ContactAndInquiryPage() {
                       </span>
                       <input
                         type="tel"
+                        name="phone"
                         required
                         maxLength={10}
                         placeholder="98765 43210"
@@ -679,6 +792,7 @@ export default function ContactAndInquiryPage() {
                       <span>Delivery Hub / City <span className="text-orange-600">*</span></span>
                     </label>
                     <select
+                      name="city"
                       value={formData.city}
                       onChange={(e) => setFormData({ ...formData, city: e.target.value })}
                       className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 bg-white text-sm focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 cursor-pointer"
@@ -700,6 +814,7 @@ export default function ContactAndInquiryPage() {
                     </label>
                     <input
                       type="text"
+                      name="pincode"
                       maxLength={6}
                       placeholder="e.g. 382009 / 380015"
                       value={formData.pincode}
@@ -708,7 +823,7 @@ export default function ContactAndInquiryPage() {
                     />
                   </div>
 
-                  {/* Contextual Field 1: Organization / Company / Hostel Name */}
+                  {/* Organization / Company / Hostel Name */}
                   <div className="space-y-1.5">
                     <label className="text-xs font-black uppercase tracking-wider text-stone-700 flex items-center justify-between">
                       <span>
@@ -725,6 +840,7 @@ export default function ContactAndInquiryPage() {
                     </label>
                     <input
                       type="text"
+                      name="organizationName"
                       placeholder={
                         formData.category === 'corporate'
                           ? 'e.g. Infosys, TCS, GIFT City Tech'
@@ -742,7 +858,7 @@ export default function ContactAndInquiryPage() {
                     />
                   </div>
 
-                  {/* Contextual Field 2: Headcount or Meal Volume */}
+                  {/* Headcount or Meal Volume */}
                   {formData.category !== 'customer_care' && (
                     <div className="space-y-1.5">
                       <label className="text-xs font-black uppercase tracking-wider text-stone-700">
@@ -755,6 +871,7 @@ export default function ContactAndInquiryPage() {
                           : 'Estimated Guests'}
                       </label>
                       <select
+                        name="estimatedMealsCount"
                         value={formData.estimatedMealsCount}
                         onChange={(e) => setFormData({ ...formData, estimatedMealsCount: e.target.value })}
                         className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 bg-white text-sm focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 cursor-pointer"
@@ -769,13 +886,14 @@ export default function ContactAndInquiryPage() {
                     </div>
                   )}
 
-                  {/* Contextual Field 3: Chef specific or Start Date */}
+                  {/* Chef Specific or Start Date */}
                   {formData.category === 'chef_partner' ? (
                     <div className="space-y-1.5">
                       <label className="text-xs font-black uppercase tracking-wider text-stone-700">
                         FSSAI License Status
                       </label>
                       <select
+                        name="hasFssai"
                         value={formData.hasFssai}
                         onChange={(e) => setFormData({ ...formData, hasFssai: e.target.value })}
                         className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 bg-white text-sm focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 cursor-pointer"
@@ -792,6 +910,7 @@ export default function ContactAndInquiryPage() {
                       </label>
                       <input
                         type="date"
+                        name="startDate"
                         value={formData.startDate}
                         onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
                         className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 bg-white text-sm focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
@@ -805,6 +924,7 @@ export default function ContactAndInquiryPage() {
                       Dietary Requirement
                     </label>
                     <select
+                      name="dietaryPreference"
                       value={formData.dietaryPreference}
                       onChange={(e) =>
                         setFormData({
@@ -831,6 +951,7 @@ export default function ContactAndInquiryPage() {
                     </label>
                     <input
                       type="text"
+                      name="subject"
                       placeholder="e.g. Requesting sample tasting for 40 tech engineers at Gandhinagar"
                       value={formData.subject}
                       onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
@@ -848,6 +969,7 @@ export default function ContactAndInquiryPage() {
                       </span>
                     </div>
                     <textarea
+                      name="message"
                       rows={4}
                       required
                       placeholder="Please mention delivery timing preferences, custom thali preferences, special occasion date, or any questions for our operations desk..."
@@ -869,7 +991,7 @@ export default function ContactAndInquiryPage() {
                 <div className="pt-4 border-t border-stone-100 flex flex-col sm:flex-row items-center justify-between gap-4">
                   <div className="flex items-center gap-2 text-xs text-stone-500">
                     <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-                    <span>Your details are secure. We never share contacts with 3rd-party telemarketers.</span>
+                    <span>Your details are secure. Netlify encrypted submission & instant SMS/WhatsApp routing.</span>
                   </div>
 
                   <button
@@ -979,7 +1101,7 @@ export default function ContactAndInquiryPage() {
           })}
         </div>
 
-        {/* Bottom Banner */}
+        {/* Bottom Concierge Card */}
         <div className="mt-12 p-6 sm:p-8 rounded-3xl bg-linear-to-r from-stone-900 via-stone-800 to-stone-900 text-white text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="space-y-1">
             <h3 className="text-lg font-black text-white">Need an immediate answer?</h3>
@@ -999,5 +1121,20 @@ export default function ContactAndInquiryPage() {
         </div>
       </section>
     </div>
+  );
+}
+
+export default function ContactAndInquiryPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-stone-50 flex items-center justify-center p-8">
+        <div className="flex items-center gap-3 text-stone-600 font-bold text-sm">
+          <div className="w-5 h-5 border-2 border-orange-600 border-t-transparent rounded-full animate-spin" />
+          <span>Loading Inquiry Desk...</span>
+        </div>
+      </div>
+    }>
+      <ContactContent />
+    </Suspense>
   );
 }
