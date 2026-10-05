@@ -1,6 +1,15 @@
 import React from 'react';
 import Link from 'next/link';
-import { UtensilsCrossed, ShieldCheck, Heart, ChefHat, Layers, GraduationCap, PartyPopper, Zap, Sparkles } from 'lucide-react';
+import {
+  UtensilsCrossed,
+  ShieldCheck,
+  Heart,
+  Zap,
+  CalendarCheck,
+  MessageSquare,
+  Compass,
+  PartyPopper
+} from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -33,50 +42,10 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Kitchen Partner Hub (Kitchen Operations) */}
+          {/* Browsing Routes */}
           <div>
             <div className="flex items-center gap-1.5 mb-3 text-white">
-              <ChefHat className="w-4 h-4 text-amber-500" />
-              <h4 className="text-xs font-black uppercase tracking-wider">Kitchen Partner Hub</h4>
-            </div>
-            <ul className="space-y-2 text-xs text-stone-400">
-              <li>
-                <Link href="/provider/dashboard" className="hover:text-amber-400 transition-colors font-medium">
-                  Partner Dashboard & Dispatch
-                </Link>
-              </li>
-              <li>
-                <Link href="/provider/dashboard" className="hover:text-amber-400 transition-colors font-medium">
-                  Weekly Menu Planner
-                </Link>
-              </li>
-              <li>
-                <Link href="/provider/dashboard" className="hover:text-amber-400 transition-colors font-medium">
-                  FSSAI Hygiene Standards & Logs
-                </Link>
-              </li>
-              <li>
-                <Link href="/provider/dashboard" className="hover:text-amber-400 transition-colors font-medium">
-                  Weekly Earnings & Instant Payouts
-                </Link>
-              </li>
-              <li>
-                <Link href="/provider/dashboard" className="hover:text-amber-400 transition-colors font-medium">
-                  Daily Packaging & QR Labels
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="hover:text-amber-400 font-semibold text-amber-500/90 transition-colors">
-                  Join as Home Chef Partner →
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Browsing Routes & Discovery */}
-          <div>
-            <div className="flex items-center gap-1.5 mb-3 text-white">
-              <Layers className="w-4 h-4 text-orange-500" />
+              <Compass className="w-4 h-4 text-orange-500" />
               <h4 className="text-xs font-black uppercase tracking-wider">Browsing Routes</h4>
             </div>
             <ul className="space-y-2 text-xs text-stone-400">
@@ -102,83 +71,142 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-white transition-colors font-medium">
-                  Inquiry & Contact Concierge
+                <Link href="/passes" className="hover:text-orange-400 transition-colors font-medium">
+                  Campus Meal Passes (₹84/meal)
                 </Link>
               </li>
               <li>
-                <Link href="/contact?category=corporate" className="hover:text-white transition-colors font-medium">
-                  Corporate Partnership RFP
+                <Link href="/track" className="hover:text-orange-400 transition-colors font-medium">
+                  Live EV Delivery Tracking
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Student Mess & Campus PG Hub */}
+          {/* Subscriptions */}
           <div>
             <div className="flex items-center gap-1.5 mb-3 text-white">
-              <GraduationCap className="w-4 h-4 text-orange-500" />
-              <h4 className="text-xs font-black uppercase tracking-wider">Student & PG Mess Hub</h4>
+              <CalendarCheck className="w-4 h-4 text-amber-500" />
+              <h4 className="text-xs font-black uppercase tracking-wider">Subscriptions</h4>
             </div>
             <ul className="space-y-2 text-xs text-stone-400">
               <li>
-                <Link href="/passes" className="hover:text-orange-400 transition-colors font-medium">
-                  Campus Meal Pass (₹84/meal)
+                <Link href="/consumer/subscriptions" className="text-amber-400 font-bold hover:text-amber-300 transition-colors flex items-center gap-1">
+                  <span>My Subscriptions</span>
+                  <span>→</span>
                 </Link>
               </li>
               <li>
-                <Link href="/passes" className="hover:text-orange-400 transition-colors font-medium">
-                  Hostel & PG Doorstep Delivery
+                <Link href="/consumer/subscriptions" className="hover:text-amber-400 transition-colors font-medium">
+                  Active Meal Calendar
                 </Link>
               </li>
               <li>
-                <Link href="/passes" className="hover:text-orange-400 transition-colors font-medium">
-                  Kota, Delhi & Pune Centers
+                <Link href="/consumer/subscriptions" className="hover:text-amber-400 transition-colors font-medium">
+                  Skip / Pause Rollover
                 </Link>
               </li>
               <li>
-                <Link href="/consumer/subscriptions" className="hover:text-orange-400 transition-colors font-medium">
-                  Skip / Pause Rollover Policy
+                <Link href="/consumer/subscriptions" className="hover:text-amber-400 transition-colors font-medium">
+                  Delivery Time Preferences
                 </Link>
               </li>
               <li>
-                <Link href="/passes" className="hover:text-orange-400 transition-colors font-medium">
-                  Exam Season Late Night Tiffins
+                <Link href="/consumer/subscriptions" className="hover:text-amber-400 transition-colors font-medium">
+                  Change Delivery Address / Locker
+                </Link>
+              </li>
+              <li>
+                <Link href="/consumer/subscriptions" className="hover:text-amber-400 transition-colors font-medium">
+                  Auto-Renewal & Invoices
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Events & Party Catering */}
+          {/* Contact & Inquiries */}
           <div>
             <div className="flex items-center gap-1.5 mb-3 text-white">
-              <PartyPopper className="w-4 h-4 text-emerald-500" />
-              <h4 className="text-xs font-black uppercase tracking-wider">Events & Catering</h4>
+              <MessageSquare className="w-4 h-4 text-emerald-500" />
+              <h4 className="text-xs font-black uppercase tracking-wider">Contact & Inquiries</h4>
             </div>
             <ul className="space-y-2 text-xs text-stone-400">
               <li>
-                <Link href="/events?type=birthday" className="hover:text-emerald-400 transition-colors font-medium">
-                  Birthday Celebration Feast
+                <Link href="/contact" className="text-emerald-400 font-bold hover:text-emerald-300 transition-colors flex items-center gap-1">
+                  <span>Contact Us & Inquiry Desk</span>
+                  <span>→</span>
                 </Link>
               </li>
               <li>
-                <Link href="/events?type=work-anniversary" className="hover:text-emerald-400 transition-colors font-medium">
-                  Work Anniversary Luncheon
+                <Link href="/contact?category=corporate" className="hover:text-emerald-400 transition-colors font-medium">
+                  Corporate & Office Meals RFP
                 </Link>
               </li>
               <li>
-                <Link href="/events?type=office" className="hover:text-emerald-400 transition-colors font-medium">
-                  Office & Team Lunch Boxes
+                <Link href="/contact?category=student_mess" className="hover:text-emerald-400 transition-colors font-medium">
+                  Hostel & PG Mess Tie-Up
                 </Link>
               </li>
               <li>
-                <Link href="/events?type=corporate" className="hover:text-emerald-400 transition-colors font-medium">
-                  Corporate Gathering Buffets
+                <Link href="/contact?category=chef_partner" className="hover:text-emerald-400 transition-colors font-medium">
+                  Join as Home Chef Partner
                 </Link>
               </li>
               <li>
-                <Link href="/events?type=meeting" className="hover:text-emerald-400 font-semibold text-emerald-400/90 transition-colors">
-                  Custom Event Catering →
+                <Link href="/contact?category=event_catering" className="hover:text-emerald-400 transition-colors font-medium">
+                  Party & Event Catering Quote
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact?category=customer_care" className="hover:text-emerald-400 transition-colors font-medium">
+                  Customer Care (15-min SLA)
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Admin & Events */}
+          <div>
+            <div className="flex items-center gap-1.5 mb-3 text-white">
+              <ShieldCheck className="w-4 h-4 text-blue-500" />
+              <h4 className="text-xs font-black uppercase tracking-wider">Admin & Catering</h4>
+            </div>
+            <ul className="space-y-2 text-xs text-stone-400">
+              <li>
+                <Link href="/admin" className="text-blue-400 font-bold hover:text-blue-300 transition-colors flex items-center gap-1">
+                  <span>Platform Admin Console</span>
+                  <span>→</span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/admin" className="hover:text-blue-400 transition-colors font-medium">
+                  Inquiries & Lead Manager
+                </Link>
+              </li>
+              <li>
+                <Link href="/admin" className="hover:text-blue-400 transition-colors font-medium">
+                  Pincode Routing Engine
+                </Link>
+              </li>
+              <li>
+                <Link href="/admin" className="hover:text-blue-400 transition-colors font-medium">
+                  Razorpay Auto-Debit Flow
+                </Link>
+              </li>
+              <li>
+                <Link href="/events" className="hover:text-emerald-400 transition-colors font-medium flex items-center gap-1 pt-1.5 border-t border-stone-800">
+                  <PartyPopper className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                  <span>Events & Catering Hub</span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/events?type=birthday" className="hover:text-emerald-400 transition-colors font-medium text-[11px]">
+                  • Birthday & Family Feasts
+                </Link>
+              </li>
+              <li>
+                <Link href="/events?type=office" className="hover:text-emerald-400 transition-colors font-medium text-[11px]">
+                  • Office & Team Lunch Boxes
                 </Link>
               </li>
             </ul>
