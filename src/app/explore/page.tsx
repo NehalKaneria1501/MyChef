@@ -102,7 +102,7 @@ function ExploreContent() {
   });
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10 bg-[#faf8f5]">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10 bg-transparent">
       
       {/* BROWSING ROUTE HEADER & HERO BANNER */}
       <div className="relative overflow-hidden bg-linear-to-br from-stone-900 via-stone-800 to-orange-950 text-white rounded-3xl p-6 sm:p-10 shadow-xl border border-stone-800">
@@ -687,7 +687,7 @@ function ExploreContent() {
 export default function ExplorePage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-[#faf8f5] flex items-center justify-center p-8">
+      <div className="min-h-screen bg-[#fff8f0] flex items-center justify-center p-8">
         <div className="flex items-center gap-3 text-stone-600 font-bold text-sm">
           <div className="w-5 h-5 border-2 border-orange-600 border-t-transparent rounded-full animate-spin" />
           <span>Loading Browsing Route & Kitchens...</span>

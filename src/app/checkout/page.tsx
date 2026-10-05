@@ -282,7 +282,7 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 bg-[#faf8f5]">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 bg-transparent">
       
       <Link href={`/provider/${checkoutPlan.provider.id}`} className="inline-flex items-center gap-1.5 text-xs font-semibold text-stone-500 hover:text-orange-600 transition-colors">
         <ArrowLeft className="w-3.5 h-3.5" />

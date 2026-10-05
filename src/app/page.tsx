@@ -258,7 +258,7 @@ export default function HomePage() {
   });
 
   return (
-    <div className="flex flex-col gap-8 pb-28 bg-[#faf8f5]">
+    <div className="flex flex-col gap-8 pb-28 bg-transparent">
 
       {/* 1. TOP FLASH SALE PROMO STRIP (ZEPTO / SWIGGY STYLE) */}
       <div className="bg-linear-to-r from-orange-600 via-amber-600 to-rose-600 text-white text-xs font-bold py-2.5 px-4 shadow-sm">

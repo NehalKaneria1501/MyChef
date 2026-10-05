@@ -136,7 +136,7 @@ export default function MembershipPassesPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12 bg-[#faf8f5]">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12 bg-transparent">
       
       {/* Header Banner */}
       <div className="text-center max-w-3xl mx-auto space-y-4">

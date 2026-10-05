@@ -32,19 +32,20 @@ export interface RegionalDishSlide {
   deliverySlot: string;
 }
 
+// 10 Distinct Delicious Dishes with 10 Different Images
 export const REGIONAL_DISHES: RegionalDishSlide[] = [
   {
     id: 'dish-north-1',
-    name: 'Shahi Paneer & Ghee Phulka Thali',
+    name: 'Amritsari Paneer Tikka Masala & Laccha Paratha',
     region: 'North Indian & Punjabi',
-    tagline: 'Makhani gravy simmered in pure A2 desi ghee with 4 butter phulkas',
-    description: 'Fresh cottage cheese cubes in silky cashew-tomato gravy, slow-simmered Dal Makhani, fragrant Jeera Basmati, and fresh farm salad.',
+    tagline: 'Clay-oven smoked malai paneer simmered in rich saffron-tomato gravy',
+    description: 'Tender paneer cubes charred to perfection with whole spices, served with 2 flaky laccha parathas in pure desi ghee, slow-simmered Dal Makhani, and mint chutney.',
     pricePerMeal: 123,
     calories: 620,
-    image: 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?auto=format&fit=crop&w=1000&q=80',
-    accentBadge: 'TOP POPULAR',
+    image: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?auto=format&fit=crop&w=1000&q=80',
+    accentBadge: 'PUNJABI SPECIAL',
     accentColor: 'from-orange-500 to-amber-600',
-    keyItems: ['4 Ghee Phulkas', 'Shahi Paneer', 'Dal Makhani', 'Jeera Rice', 'Gulab Jamun'],
+    keyItems: ['2 Laccha Parathas', 'Paneer Tikka Masala', 'Dal Makhani', 'Jeera Basmati', 'Gulab Jamun'],
     providerId: 'prov-1',
     chefName: 'Maa Ki Rasoi (HSR)',
     deliverySlot: '12:15 PM - 1:30 PM',
@@ -54,7 +55,7 @@ export const REGIONAL_DISHES: RegionalDishSlide[] = [
     name: 'Ethiopian Shiro Wat & Misir with Injera',
     region: 'African Vegetarian',
     tagline: 'Berbere spiced chickpea & red lentil stews with sourdough teff injera',
-    description: 'Authentic Ethiopian plant-powered feast with slow-simmered Shiro (chickpea stew), spicy Misir Wat (red lentils), and soft fermented Teff Injera flatbreads.',
+    description: 'Authentic Ethiopian plant-powered feast with slow-simmered Shiro (chickpea stew), spicy Misir Wat (red lentils), braised collards, and soft fermented Teff Injera flatbreads.',
     pricePerMeal: 134,
     calories: 640,
     image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=1000&q=80',
@@ -161,6 +162,38 @@ export const REGIONAL_DISHES: RegionalDishSlide[] = [
     chefName: 'Kilimanjaro Afro-Veg Canteen',
     deliverySlot: '12:00 PM - 1:30 PM',
   },
+  {
+    id: 'dish-afro-4',
+    name: 'East African Sukuma Wiki & Ugali Meal',
+    region: 'African Vegetarian',
+    tagline: 'Braised collard greens, sweet tomatoes, white maize ugali & coconut beans',
+    description: 'Traditional Kenyan and Tanzanian staple of tender spiced collards (Sukuma Wiki), white cornmeal ugali, and coconut-simmered pigeon peas (Maharagwe).',
+    pricePerMeal: 129,
+    calories: 590,
+    image: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&w=1000&q=80',
+    accentBadge: 'EAST AFRICAN SAFARI',
+    accentColor: 'from-emerald-600 to-green-700',
+    keyItems: ['Steamed Corn Ugali', 'Sukuma Wiki Collard Greens', 'Coconut Maharagwe Beans', 'Kachumbari Tomato Salad', 'Avocado Slice'],
+    providerId: 'prov-5',
+    chefName: 'Kilimanjaro Afro-Veg Canteen',
+    deliverySlot: '12:00 PM - 1:30 PM',
+  },
+  {
+    id: 'dish-afro-5',
+    name: 'South African Veggie Bunny Chow Loaf',
+    region: 'African Vegetarian',
+    tagline: 'Artisan hollowed sourdough loaf packed with spicy curried sugar beans',
+    description: 'Legendary Durban street food made vegetarian: a crusty quarter-loaf hollowed and overflowing with rich, aromatic sugar bean curry and crunchy carrot sambal.',
+    pricePerMeal: 132,
+    calories: 670,
+    image: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&w=1000&q=80',
+    accentBadge: 'DURBAN SPECIAL',
+    accentColor: 'from-amber-600 to-red-600',
+    keyItems: ['Hollowed Artisan Loaf', 'Curried Sugar Beans', 'Durban Potato Sambal', 'Pickled Chilies', 'Fresh Coriander'],
+    providerId: 'prov-5',
+    chefName: 'Kilimanjaro Afro-Veg Canteen',
+    deliverySlot: '12:30 PM - 1:45 PM',
+  },
 ];
 
 export default function DishesImageSlider() {
@@ -204,7 +237,7 @@ export default function DishesImageSlider() {
           </span>
           <span className="text-stone-300 font-extrabold flex items-center gap-1.5">
             <Globe2 className="w-3.5 h-3.5 text-orange-400" />
-            <span>Delicacies From All Regions (8 Regional Specials)</span>
+            <span>Delicacies From All Regions (10 Regional Specials)</span>
           </span>
         </div>
         <div className="flex items-center gap-1 text-[11px] text-stone-400 font-bold">

@@ -350,7 +350,7 @@ function ContactContent() {
   );
 
   return (
-    <div className="min-h-screen bg-stone-50 text-stone-900 pb-20">
+    <div className="min-h-screen bg-transparent text-stone-900 pb-20">
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-linear-to-b from-orange-950 via-stone-900 to-stone-900 text-white pt-12 pb-20 sm:pt-16 sm:pb-28">
         <div className="absolute top-0 left-1/4 -translate-x-1/2 w-96 h-96 bg-orange-600/20 rounded-full blur-3xl pointer-events-none" />

@@ -133,7 +133,7 @@ export default function RootLayout({
       </head>
       <body
         suppressHydrationWarning
-        className="min-h-screen flex flex-col antialiased selection:bg-orange-600 selection:text-white font-sans"
+        className="min-h-screen flex flex-col antialiased selection:bg-orange-600 selection:text-white font-sans bg-[#fff8f0]"
       >
         {/* GTM noscript fallback */}
         {gtmId && (
