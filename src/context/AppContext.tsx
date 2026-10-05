@@ -10,9 +10,10 @@ import {
   UserRole,
   AuthUser,
   OrderFulfillmentMode,
-  LiveOrderTracking
+  LiveOrderTracking,
+  InquirySubmission
 } from '@/lib/types';
-import { INITIAL_PROVIDERS, INITIAL_ADDRESSES, INITIAL_SUBSCRIPTIONS, MOCK_LIVE_ORDER } from '@/lib/mockData';
+import { INITIAL_PROVIDERS, INITIAL_ADDRESSES, INITIAL_SUBSCRIPTIONS, MOCK_LIVE_ORDER, INITIAL_INQUIRIES } from '@/lib/mockData';
 import { supabase } from '@/lib/supabase/client';
 
 export interface CheckoutPlanSelection {
@@ -52,6 +53,10 @@ interface AppContextType {
   cancelSubscription: (subId: string) => void;
   liveOrder: LiveOrderTracking;
   setLiveOrder: React.Dispatch<React.SetStateAction<LiveOrderTracking>>;
+  // Inquiries
+  inquiries: InquirySubmission[];
+  addInquiry: (inquiry: Omit<InquirySubmission, 'id' | 'createdAt' | 'status'>) => Promise<{ success: boolean; inquiryId: string }>;
+  updateInquiryStatus: (id: string, status: InquirySubmission['status']) => void;
   // Auth methods
   signIn: (emailOrPhone: string, password?: string) => Promise<{ success: boolean; error?: string }>;
   signUp: (name: string, phone: string, email: string, password: string, role: UserRole) => Promise<{ success: boolean; error?: string }>;
@@ -81,6 +86,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [subscriptions, setSubscriptions] = useState<Subscription[]>(INITIAL_SUBSCRIPTIONS);
   const [checkoutPlan, setCheckoutPlan] = useState<CheckoutPlanSelection | null>(null);
   const [liveOrder, setLiveOrder] = useState<LiveOrderTracking>(MOCK_LIVE_ORDER);
+  const [inquiries, setInquiries] = useState<InquirySubmission[]>(INITIAL_INQUIRIES);
 
   // Sync role with logged-in user
   useEffect(() => {
@@ -268,6 +274,48 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
+  const addInquiry = async (
+    data: Omit<InquirySubmission, 'id' | 'createdAt' | 'status'>
+  ): Promise<{ success: boolean; inquiryId: string }> => {
+    const randomHex = Math.random().toString(36).substring(2, 6).toUpperCase();
+    const prefixMap: Record<string, string> = {
+      corporate: 'INQ-CORP',
+      student_mess: 'INQ-MESS',
+      chef_partner: 'INQ-CHEF',
+      event_catering: 'INQ-EVNT',
+      customer_care: 'INQ-CARE',
+      other: 'INQ-GEN',
+    };
+    const prefix = prefixMap[data.category] || 'INQ-REF';
+    const newId = `${prefix}-${Date.now().toString().slice(-4)}-${randomHex}`;
+    
+    const newInquiry: InquirySubmission = {
+      ...data,
+      id: newId,
+      status: 'new',
+      createdAt: new Date().toISOString(),
+    };
+
+    setInquiries((prev) => [newInquiry, ...prev]);
+
+    // Send to backend API route as well
+    try {
+      await fetch('/api/inquiries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newInquiry),
+      });
+    } catch (e) {
+      console.log('Inquiry sync (offline fallback):', e);
+    }
+
+    return { success: true, inquiryId: newId };
+  };
+
+  const updateInquiryStatus = (id: string, status: InquirySubmission['status']) => {
+    setInquiries((prev) => prev.map((inq) => (inq.id === id ? { ...inq, status } : inq)));
+  };
+
   // Auth methods
   const signIn = async (emailOrPhone: string, password?: string): Promise<{ success: boolean; error?: string }> => {
     try {
@@ -402,6 +450,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         cancelSubscription,
         liveOrder,
         setLiveOrder,
+        inquiries,
+        addInquiry,
+        updateInquiryStatus,
         signIn,
         signUp,
         sendOtp,

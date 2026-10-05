@@ -146,3 +146,29 @@ export interface LiveOrderTracking {
   destinationAddress: string;
   parcelLockerCode?: string;
 }
+
+export type InquiryCategory =
+  | 'corporate'
+  | 'student_mess'
+  | 'chef_partner'
+  | 'event_catering'
+  | 'customer_care'
+  | 'other';
+
+export interface InquirySubmission {
+  id: string;
+  category: InquiryCategory;
+  fullName: string;
+  email: string;
+  phone: string;
+  city: string;
+  pincode?: string;
+  organizationName?: string;
+  estimatedMealsCount?: string;
+  dietaryPreference?: 'all' | 'pure_veg' | 'jain' | 'custom';
+  startDate?: string;
+  subject: string;
+  message: string;
+  status: 'new' | 'contacted' | 'in_review' | 'resolved';
+  createdAt: string;
+}

@@ -25,7 +25,11 @@ import {
   TrendingUp,
   Clock,
   Sliders,
-  Sparkles
+  Sparkles,
+  MessageSquare,
+  Phone,
+  Mail,
+  ExternalLink
 } from 'lucide-react';
 
 interface PendingApplication {
@@ -76,13 +80,14 @@ interface SupportTicket {
 }
 
 export default function AdminDashboardPage() {
-  const { providers, approveProvider, rejectProvider, subscriptions } = useApp();
+  const { providers, approveProvider, rejectProvider, subscriptions, inquiries, updateInquiryStatus } = useApp();
   
   const [adminTab, setAdminTab] = useState<
-    'approvals' | 'providers' | 'subscriptions' | 'autodebit' | 'pincodes' | 'support'
+    'approvals' | 'providers' | 'subscriptions' | 'autodebit' | 'pincodes' | 'support' | 'inquiries'
   >('approvals');
   
   const [searchQuery, setSearchQuery] = useState('');
+  const [inquiryCategoryFilter, setInquiryCategoryFilter] = useState<string>('All');
   const [adminToast, setAdminToast] = useState<string | null>(null);
 
   const showToast = (msg: string) => {
@@ -329,6 +334,22 @@ export default function AdminDashboardPage() {
     return matchesPriority && matchesSearch;
   });
 
+  const filteredInquiries = inquiries.filter((inq) => {
+    const matchesCategory =
+      inquiryCategoryFilter === 'All' || inq.category === inquiryCategoryFilter;
+    const matchesSearch =
+      !q ||
+      inq.fullName.toLowerCase().includes(q) ||
+      inq.id.toLowerCase().includes(q) ||
+      inq.email.toLowerCase().includes(q) ||
+      inq.phone.includes(q) ||
+      inq.city.toLowerCase().includes(q) ||
+      (inq.organizationName && inq.organizationName.toLowerCase().includes(q)) ||
+      inq.subject.toLowerCase().includes(q) ||
+      inq.message.toLowerCase().includes(q);
+    return matchesCategory && matchesSearch;
+  });
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       
@@ -353,7 +374,7 @@ export default function AdminDashboardPage() {
           </p>
         </div>
 
-        {/* 6 Tabs */}
+        {/* Tabs */}
         <div className="flex bg-stone-800 p-1.5 rounded-2xl border border-stone-700 overflow-x-auto text-xs font-bold gap-1">
           <button
             onClick={() => setAdminTab('approvals')}
@@ -378,6 +399,15 @@ export default function AdminDashboardPage() {
             }`}
           >
             Subscriptions ({subscriptions.length})
+          </button>
+          <button
+            onClick={() => setAdminTab('inquiries')}
+            className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer whitespace-nowrap flex items-center gap-1 ${
+              adminTab === 'inquiries' ? 'bg-orange-600 text-white shadow-xs' : 'text-stone-300 hover:text-white'
+            }`}
+          >
+            <MessageSquare className="w-3.5 h-3.5 text-orange-400" />
+            <span>Inquiries & Leads ({inquiries.filter((i) => i.status === 'new').length})</span>
           </button>
           <button
             onClick={() => setAdminTab('autodebit')}
@@ -464,6 +494,8 @@ export default function AdminDashboardPage() {
               ? 'mandates by subscriber name or mandate ID' 
               : adminTab === 'pincodes' 
               ? 'pincode, locality or city' 
+              : adminTab === 'inquiries'
+              ? 'inquiries by name, company, city, or phone'
               : adminTab === 'support' 
               ? 'tickets by customer name, ticket ID, or issue' 
               : 'subscriptions...'
@@ -912,6 +944,273 @@ export default function AdminDashboardPage() {
                   )}
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 7. INQUIRIES & BUSINESS LEADS */}
+      {adminTab === 'inquiries' && (
+        <div className="space-y-6">
+          <div className="bg-white p-6 rounded-3xl border border-stone-200 shadow-xs space-y-5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-lg font-black text-stone-900">
+                    Business Inquiries, Corporate Partnerships & Leads
+                  </h2>
+                  <span className="px-2.5 py-0.5 rounded-full text-xs font-black bg-orange-100 text-orange-700">
+                    {filteredInquiries.length} inquiries
+                  </span>
+                </div>
+                <p className="text-xs text-stone-500 mt-1">
+                  Manage incoming client leads for corporate office lunches, hostel & PG mess passes, home chef onboarding, and bulk party feasts.
+                </p>
+              </div>
+
+              {/* Status summary counters */}
+              <div className="flex items-center gap-2 text-xs">
+                <span className="px-2.5 py-1 rounded-xl bg-orange-50 border border-orange-200 text-orange-800 font-bold">
+                  {inquiries.filter((i) => i.status === 'new').length} New
+                </span>
+                <span className="px-2.5 py-1 rounded-xl bg-blue-50 border border-blue-200 text-blue-800 font-bold">
+                  {inquiries.filter((i) => i.status === 'contacted').length} Contacted
+                </span>
+                <span className="px-2.5 py-1 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 font-bold">
+                  {inquiries.filter((i) => i.status === 'resolved').length} Resolved
+                </span>
+              </div>
+            </div>
+
+            {/* Category Filter Chips */}
+            <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-stone-100">
+              <span className="text-xs font-bold text-stone-500 mr-1">Filter Type:</span>
+              {[
+                { id: 'All', label: 'All Inquiries' },
+                { id: 'corporate', label: '🏢 Corporate Meals' },
+                { id: 'student_mess', label: '🎓 PG & Hostel Mess' },
+                { id: 'chef_partner', label: '👩‍🍳 Chef Onboarding' },
+                { id: 'event_catering', label: '🎉 Event Catering' },
+                { id: 'customer_care', label: '💬 Support Desk' },
+              ].map((cat) => (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => setInquiryCategoryFilter(cat.id)}
+                  className={`px-3 py-1 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                    inquiryCategoryFilter === cat.id
+                      ? 'bg-stone-900 text-white shadow-2xs'
+                      : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Inquiries List */}
+            <div className="space-y-4 pt-2">
+              {filteredInquiries.length === 0 ? (
+                <div className="py-12 text-center text-stone-400 space-y-2">
+                  <MessageSquare className="w-8 h-8 mx-auto text-stone-300" />
+                  <p className="text-xs font-bold">No inquiries found matching your filters.</p>
+                </div>
+              ) : (
+                filteredInquiries.map((inq) => {
+                  const categoryBadgeMap: Record<string, { label: string; color: string }> = {
+                    corporate: { label: 'Corporate Office', color: 'bg-blue-100 text-blue-800 border-blue-200' },
+                    student_mess: { label: 'Hostel / PG Mess', color: 'bg-amber-100 text-amber-800 border-amber-200' },
+                    chef_partner: { label: 'Chef Onboarding', color: 'bg-orange-100 text-orange-800 border-orange-200' },
+                    event_catering: { label: 'Event Catering', color: 'bg-emerald-100 text-emerald-800 border-emerald-200' },
+                    customer_care: { label: 'Customer Care', color: 'bg-purple-100 text-purple-800 border-purple-200' },
+                    other: { label: 'General', color: 'bg-stone-100 text-stone-800 border-stone-200' },
+                  };
+                  const badge = categoryBadgeMap[inq.category] || categoryBadgeMap.other;
+
+                  const statusColorMap: Record<string, string> = {
+                    new: 'bg-orange-500 text-white',
+                    contacted: 'bg-blue-600 text-white',
+                    in_review: 'bg-amber-500 text-white',
+                    resolved: 'bg-emerald-600 text-white',
+                  };
+
+                  const cleanPhone = inq.phone.replace(/\D/g, '');
+                  const waText = encodeURIComponent(
+                    `Hello ${inq.fullName}, this is the MyChef Operations Desk regarding your inquiry #${inq.id} for ${badge.label}. How can we assist you with sample menus and custom pricing?`
+                  );
+
+                  return (
+                    <div
+                      key={inq.id}
+                      className="p-5 rounded-2xl border border-stone-200 bg-stone-50/50 hover:bg-white hover:border-stone-300 transition-all space-y-3"
+                    >
+                      {/* Top Header */}
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="font-mono text-xs font-black text-stone-900 bg-white px-2.5 py-0.5 rounded-md border border-stone-200 shadow-2xs">
+                            {inq.id}
+                          </span>
+                          <span
+                            className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider border ${badge.color}`}
+                          >
+                            {badge.label}
+                          </span>
+                          <span
+                            className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${
+                              statusColorMap[inq.status] || 'bg-stone-400 text-white'
+                            }`}
+                          >
+                            {inq.status.replace('_', ' ')}
+                          </span>
+                        </div>
+
+                        <span className="text-[11px] text-stone-400 font-medium">
+                          {new Date(inq.createdAt).toLocaleDateString('en-IN', {
+                            day: 'numeric',
+                            month: 'short',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })}
+                        </span>
+                      </div>
+
+                      {/* Client Details Row */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs pt-1">
+                        <div>
+                          <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider block">
+                            Contact Person
+                          </span>
+                          <span className="font-bold text-stone-900 text-sm">{inq.fullName}</span>
+                          {inq.organizationName && (
+                            <span className="text-stone-500 block text-[11px] truncate">
+                              {inq.organizationName}
+                            </span>
+                          )}
+                        </div>
+
+                        <div>
+                          <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider block">
+                            Location Hub
+                          </span>
+                          <span className="font-bold text-stone-800">
+                            {inq.city} {inq.pincode ? `(${inq.pincode})` : ''}
+                          </span>
+                        </div>
+
+                        <div>
+                          <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider block">
+                            Requirement Specs
+                          </span>
+                          <span className="font-semibold text-stone-800">
+                            {inq.estimatedMealsCount || 'Custom volume'} • {inq.dietaryPreference || 'all'}
+                          </span>
+                          {inq.startDate && (
+                            <span className="text-stone-500 block text-[11px]">
+                              Starts: {inq.startDate}
+                            </span>
+                          )}
+                        </div>
+
+                        <div>
+                          <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider block">
+                            Direct Contact
+                          </span>
+                          <span className="font-mono text-stone-800 block">{inq.phone}</span>
+                          <span className="text-stone-500 text-[11px] truncate block">{inq.email}</span>
+                        </div>
+                      </div>
+
+                      {/* Subject & Message Box */}
+                      <div className="p-3.5 rounded-xl bg-white border border-stone-200 text-xs space-y-1">
+                        <p className="font-bold text-stone-900">{inq.subject}</p>
+                        <p className="text-stone-600 leading-relaxed">{inq.message}</p>
+                      </div>
+
+                      {/* Action Toolbar */}
+                      <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-stone-200/60">
+                        {/* Quick Contact Buttons */}
+                        <div className="flex flex-wrap items-center gap-2">
+                          <a
+                            href={`https://wa.me/${cleanPhone.startsWith('91') ? cleanPhone : '91' + cleanPhone}?text=${waText}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-2xs transition-colors"
+                          >
+                            <MessageSquare className="w-3.5 h-3.5" />
+                            <span>WhatsApp Client</span>
+                          </a>
+
+                          <a
+                            href={`tel:${inq.phone}`}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-800 font-bold text-xs transition-colors"
+                          >
+                            <Phone className="w-3.5 h-3.5 text-stone-600" />
+                            <span>Call</span>
+                          </a>
+
+                          <a
+                            href={`mailto:${inq.email}?subject=MyChef%20Inquiry%20${inq.id}%20Response`}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-800 font-bold text-xs transition-colors"
+                          >
+                            <Mail className="w-3.5 h-3.5 text-stone-600" />
+                            <span>Email</span>
+                          </a>
+                        </div>
+
+                        {/* Status Toggle Buttons */}
+                        <div className="flex items-center gap-1.5 text-xs">
+                          <span className="text-[11px] font-bold text-stone-400 mr-1">Update Status:</span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              updateInquiryStatus(inq.id, 'contacted');
+                              showToast(`Inquiry ${inq.id} marked as Contacted`);
+                            }}
+                            className={`px-2.5 py-1 rounded-lg font-bold transition-colors cursor-pointer ${
+                              inq.status === 'contacted'
+                                ? 'bg-blue-600 text-white'
+                                : 'bg-stone-200 text-stone-700 hover:bg-stone-300'
+                            }`}
+                          >
+                            Contacted
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => {
+                              updateInquiryStatus(inq.id, 'in_review');
+                              showToast(`Inquiry ${inq.id} marked as In Review`);
+                            }}
+                            className={`px-2.5 py-1 rounded-lg font-bold transition-colors cursor-pointer ${
+                              inq.status === 'in_review'
+                                ? 'bg-amber-600 text-white'
+                                : 'bg-stone-200 text-stone-700 hover:bg-stone-300'
+                            }`}
+                          >
+                            In Review
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => {
+                              updateInquiryStatus(inq.id, 'resolved');
+                              showToast(`Inquiry ${inq.id} marked as Resolved`);
+                            }}
+                            className={`px-2.5 py-1 rounded-lg font-bold transition-colors cursor-pointer ${
+                              inq.status === 'resolved'
+                                ? 'bg-emerald-600 text-white'
+                                : 'bg-stone-200 text-stone-700 hover:bg-stone-300'
+                            }`}
+                          >
+                            Resolved
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
             </div>
           </div>
         </div>

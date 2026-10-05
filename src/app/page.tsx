@@ -29,7 +29,13 @@ import {
   X,
   CheckCircle2,
   Utensils,
-  GraduationCap
+  GraduationCap,
+  Building2,
+  MessageSquare,
+  PartyPopper,
+  Award,
+  Briefcase,
+  UtensilsCrossed
 } from 'lucide-react';
 
 export default function HomePage() {
@@ -740,6 +746,304 @@ export default function HomePage() {
             ))}
           </div>
 
+        </div>
+      </section>
+
+      {/* 6.3 EVENTS & CATERING SHOWCASE (5 FEAST PACKAGES) */}
+      <section className="py-14 bg-stone-50 border-t border-stone-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100/80 border border-emerald-300 text-emerald-900 text-xs font-black uppercase tracking-wider mb-2">
+                <PartyPopper className="w-3.5 h-3.5 text-emerald-600" />
+                <span>Bulk Feasts & Office Catering</span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-black text-stone-900 tracking-tight">
+                Events & Catering
+              </h2>
+              <p className="text-stone-600 text-xs sm:text-sm mt-1 max-w-2xl">
+                Wholesome homestyle feasts prepared fresh in certified neighborhood kitchens. Delivered hot in thermal chafers with eco-friendly tableware.
+              </p>
+            </div>
+            <Link
+              href="/events"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-white hover:bg-emerald-50 border border-stone-300 hover:border-emerald-300 text-emerald-800 font-extrabold text-xs transition-all shadow-2xs shrink-0 self-start md:self-auto"
+            >
+              <span>Explore All 5 Packages & Calculator</span>
+              <ChevronRight className="w-4 h-4 text-emerald-600" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+            {/* 1. Birthday Celebration Feast */}
+            <div className="bg-white rounded-3xl p-5 border border-pink-200/80 hover:border-pink-400 hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between group">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="w-10 h-10 rounded-2xl bg-pink-100 text-pink-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <PartyPopper className="w-5 h-5" />
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-pink-50 text-pink-700 border border-pink-200">
+                    Family Feast
+                  </span>
+                </div>
+                <div>
+                  <h3 className="font-black text-sm text-stone-900 leading-tight">
+                    Birthday Celebration Feast
+                  </h3>
+                  <p className="text-[11px] text-stone-500 mt-1 line-clamp-2">
+                    Joyous birthdays & family gatherings with rich gravies, live phulkas & desi ghee sweets.
+                  </p>
+                </div>
+                <div className="pt-2 border-t border-stone-100 flex items-baseline gap-1">
+                  <span className="text-lg font-black text-stone-900">₹279</span>
+                  <span className="text-[10px] text-stone-500 font-bold">/ plate (min 15)</span>
+                </div>
+              </div>
+              <div className="pt-4 mt-2">
+                <Link
+                  href="/events?type=birthday"
+                  className="w-full py-2.5 px-3 rounded-xl bg-pink-50 group-hover:bg-pink-600 text-pink-700 group-hover:text-white font-black text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                >
+                  <span>View Birthday Menu</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+
+            {/* 2. Work Anniversary Luncheon */}
+            <div className="bg-white rounded-3xl p-5 border border-amber-200/80 hover:border-amber-400 hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between group">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="w-10 h-10 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <Award className="w-5 h-5" />
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+                    Milestone
+                  </span>
+                </div>
+                <div>
+                  <h3 className="font-black text-sm text-stone-900 leading-tight">
+                    Work Anniversary Luncheon
+                  </h3>
+                  <p className="text-[11px] text-stone-500 mt-1 line-clamp-2">
+                    Honor promotions & team milestones with executive bento boxes & congratulations sleeves.
+                  </p>
+                </div>
+                <div className="pt-2 border-t border-stone-100 flex items-baseline gap-1">
+                  <span className="text-lg font-black text-stone-900">₹249</span>
+                  <span className="text-[10px] text-stone-500 font-bold">/ plate (min 15)</span>
+                </div>
+              </div>
+              <div className="pt-4 mt-2">
+                <Link
+                  href="/events?type=work-anniversary"
+                  className="w-full py-2.5 px-3 rounded-xl bg-amber-50 group-hover:bg-amber-600 text-amber-800 group-hover:text-white font-black text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                >
+                  <span>View Luncheon Menu</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+
+            {/* 3. Office & Team Lunch Boxes */}
+            <div className="bg-white rounded-3xl p-5 border border-blue-200/80 hover:border-blue-400 hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between group">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="w-10 h-10 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <Briefcase className="w-5 h-5" />
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+                    Daily / Weekly
+                  </span>
+                </div>
+                <div>
+                  <h3 className="font-black text-sm text-stone-900 leading-tight">
+                    Office & Team Lunch Boxes
+                  </h3>
+                  <p className="text-[11px] text-stone-500 mt-1 line-clamp-2">
+                    Wholesome low-oil meals for tech teams, sprint demos & hackathons with individual labeling.
+                  </p>
+                </div>
+                <div className="pt-2 border-t border-stone-100 flex items-baseline gap-1">
+                  <span className="text-lg font-black text-stone-900">₹149</span>
+                  <span className="text-[10px] text-stone-500 font-bold">/ box (min 10)</span>
+                </div>
+              </div>
+              <div className="pt-4 mt-2">
+                <Link
+                  href="/events?type=office"
+                  className="w-full py-2.5 px-3 rounded-xl bg-blue-50 group-hover:bg-blue-600 text-blue-700 group-hover:text-white font-black text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                >
+                  <span>View Office Box Menu</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+
+            {/* 4. Corporate Gathering Buffets */}
+            <div className="bg-white rounded-3xl p-5 border border-emerald-200/80 hover:border-emerald-400 hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between group">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <Building2 className="w-5 h-5" />
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    Grand Summit
+                  </span>
+                </div>
+                <div>
+                  <h3 className="font-black text-sm text-stone-900 leading-tight">
+                    Corporate Gathering Buffets
+                  </h3>
+                  <p className="text-[11px] text-stone-500 mt-1 line-clamp-2">
+                    End-to-end banquet catering with brass chafers, live chaat counter & hospitality servers.
+                  </p>
+                </div>
+                <div className="pt-2 border-t border-stone-100 flex items-baseline gap-1">
+                  <span className="text-lg font-black text-stone-900">₹389</span>
+                  <span className="text-[10px] text-stone-500 font-bold">/ plate (min 30)</span>
+                </div>
+              </div>
+              <div className="pt-4 mt-2">
+                <Link
+                  href="/events?type=corporate"
+                  className="w-full py-2.5 px-3 rounded-xl bg-emerald-50 group-hover:bg-emerald-600 text-emerald-800 group-hover:text-white font-black text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                >
+                  <span>View Buffet Menu</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+
+            {/* 5. Custom Event Catering */}
+            <div className="bg-white rounded-3xl p-5 border border-purple-200/80 hover:border-purple-400 hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between group">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="w-10 h-10 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <UtensilsCrossed className="w-5 h-5" />
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-purple-50 text-purple-700 border border-purple-200">
+                    Bespoke
+                  </span>
+                </div>
+                <div>
+                  <h3 className="font-black text-sm text-stone-900 leading-tight">
+                    Custom Event Catering
+                  </h3>
+                  <p className="text-[11px] text-stone-500 mt-1 line-clamp-2">
+                    100% strict Jain, VIP board meetings, religious pujas & tailored dietary preferences.
+                  </p>
+                </div>
+                <div className="pt-2 border-t border-stone-100 flex items-baseline gap-1">
+                  <span className="text-lg font-black text-stone-900">₹319</span>
+                  <span className="text-[10px] text-stone-500 font-bold">/ plate (min 15)</span>
+                </div>
+              </div>
+              <div className="pt-4 mt-2">
+                <Link
+                  href="/events?type=meeting"
+                  className="w-full py-2.5 px-3 rounded-xl bg-purple-50 group-hover:bg-purple-600 text-purple-700 group-hover:text-white font-black text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                >
+                  <span>View Custom Menu</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 6.5 CORPORATE, HOSTEL MESS & CHEF PARTNERSHIP INQUIRY BANNER */}
+      <section className="py-12 bg-linear-to-b from-white to-stone-100 border-t border-stone-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-stone-900 via-stone-950 to-orange-950 text-white p-6 sm:p-10 lg:p-12 shadow-2xl border border-stone-800">
+            {/* Background ambient blurs */}
+            <div className="absolute top-0 right-0 w-80 h-80 bg-orange-600/20 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute bottom-0 left-10 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+              {/* Left Column: Heading & Pitch */}
+              <div className="lg:col-span-7 space-y-4">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/20 border border-orange-400/30 text-orange-300 text-xs font-black uppercase tracking-wider">
+                  <Sparkles className="w-3.5 h-3.5 text-orange-400" />
+                  <span>Corporate, Campus & Chef Partnerships</span>
+                </div>
+
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight leading-tight">
+                  Need Daily Team Lunches, Hostel Mess Passes, or Chef Onboarding?
+                </h2>
+
+                <p className="text-sm text-stone-300 leading-relaxed max-w-xl">
+                  Connect directly with our regional operations concierge. Request tailored monthly menus, consolidated GST invoicing, and complimentary tasting sample boxes for your team.
+                </p>
+
+                {/* 3 Pillar Pills */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+                  <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-1">
+                    <Building2 className="w-4 h-4 text-blue-400" />
+                    <span className="font-bold text-xs block text-white">Corporate Accounts</span>
+                    <span className="text-[10px] text-stone-400 block">15–500+ desk lunch boxes</span>
+                  </div>
+                  <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-1">
+                    <GraduationCap className="w-4 h-4 text-amber-400" />
+                    <span className="font-bold text-xs block text-white">PG & Mess Tie-ups</span>
+                    <span className="text-[10px] text-stone-400 block">₹84/meal campus passes</span>
+                  </div>
+                  <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-1">
+                    <ChefHat className="w-4 h-4 text-orange-400" />
+                    <span className="font-bold text-xs block text-white">Chef Onboarding</span>
+                    <span className="text-[10px] text-stone-400 block">Cook from home kitchen</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: Fast Contact / Inquiry Card */}
+              <div className="lg:col-span-5 bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/15 space-y-4">
+                <div className="space-y-1">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-orange-400 block">
+                    Fast Operations SLA
+                  </span>
+                  <h3 className="text-base font-black text-white">
+                    Submit an Inquiry or Chat With Concierge
+                  </h3>
+                  <p className="text-xs text-stone-300">
+                    Our operations lead responds within 15 to 30 minutes with custom pricing & sample menu tasting details.
+                  </p>
+                </div>
+
+                <div className="space-y-2.5 pt-2">
+                  <Link
+                    href="/contact"
+                    className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-linear-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white font-black text-xs shadow-lg shadow-orange-600/30 transition-all cursor-pointer"
+                  >
+                    <span>Open Contact & Inquiry Form</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </Link>
+
+                  <a
+                    href="https://wa.me/919876543210?text=Hello%20MyChef%20Team!%20I%20would%20like%20to%20inquire%20about%20your%20services."
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-emerald-600/90 hover:bg-emerald-600 text-white font-bold text-xs transition-colors cursor-pointer"
+                  >
+                    <MessageSquare className="w-4 h-4" />
+                    <span>WhatsApp Concierge (+91 98765 43210)</span>
+                  </a>
+                </div>
+
+                <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[11px] text-stone-400">
+                  <span className="flex items-center gap-1">
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>100% FSSAI Inspected</span>
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Clock className="w-3.5 h-3.5 text-amber-400" />
+                    <span>8 AM – 10 PM Support</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

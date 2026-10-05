@@ -17,7 +17,11 @@ import {
   LogOut,
   Bike,
   GraduationCap,
-  Building2
+  Building2,
+  MessageSquare,
+  PartyPopper,
+  Award,
+  Briefcase
 } from 'lucide-react';
 
 export default function Navbar() {
@@ -119,6 +123,83 @@ export default function Navbar() {
               </span>
             </Link>
 
+            <div className="relative group">
+              <Link
+                href="/events"
+                className={`flex items-center gap-1.5 px-3 py-1.5 xl:py-2 rounded-xl text-[11px] xl:text-xs font-black transition-all whitespace-nowrap ${
+                  pathname.startsWith('/events')
+                    ? 'text-emerald-800 bg-emerald-50 border border-emerald-200 shadow-2xs'
+                    : 'text-stone-700 hover:text-emerald-700 hover:bg-emerald-50/60'
+                }`}
+              >
+                <PartyPopper className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                <span>Events & Catering</span>
+                <ChevronDown className="w-3 h-3 text-stone-400 group-hover:text-emerald-600 transition-transform group-hover:rotate-180" />
+              </Link>
+
+              {/* Hover Dropdown with the 5 Event Packages */}
+              <div className="absolute top-full left-0 pt-1.5 w-72 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="p-2 bg-white rounded-2xl shadow-xl border border-stone-200/90 backdrop-blur-md">
+                  <div className="px-3 py-1.5 border-b border-stone-100 text-[10px] font-black uppercase text-stone-400 tracking-wider flex items-center justify-between">
+                    <span>Celebrations & Buffets</span>
+                    <Link href="/events" className="text-emerald-600 hover:underline">View All →</Link>
+                  </div>
+                  <div className="space-y-0.5 pt-1.5">
+                    <Link
+                      href="/events?type=birthday"
+                      className="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-pink-50 text-stone-700 hover:text-pink-700 text-xs font-bold transition-colors group/item"
+                    >
+                      <span className="flex items-center gap-2">
+                        <PartyPopper className="w-3.5 h-3.5 text-pink-500" />
+                        <span>Birthday Celebration Feast</span>
+                      </span>
+                      <span className="text-[10px] font-black text-pink-600 bg-pink-100/80 px-1.5 py-0.5 rounded-md">₹279</span>
+                    </Link>
+                    <Link
+                      href="/events?type=work-anniversary"
+                      className="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-amber-50 text-stone-700 hover:text-amber-700 text-xs font-bold transition-colors group/item"
+                    >
+                      <span className="flex items-center gap-2">
+                        <Award className="w-3.5 h-3.5 text-amber-500" />
+                        <span>Work Anniversary Luncheon</span>
+                      </span>
+                      <span className="text-[10px] font-black text-amber-600 bg-amber-100/80 px-1.5 py-0.5 rounded-md">₹249</span>
+                    </Link>
+                    <Link
+                      href="/events?type=office"
+                      className="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-blue-50 text-stone-700 hover:text-blue-700 text-xs font-bold transition-colors group/item"
+                    >
+                      <span className="flex items-center gap-2">
+                        <Briefcase className="w-3.5 h-3.5 text-blue-500" />
+                        <span>Office & Team Lunch Boxes</span>
+                      </span>
+                      <span className="text-[10px] font-black text-blue-600 bg-blue-100/80 px-1.5 py-0.5 rounded-md">₹149</span>
+                    </Link>
+                    <Link
+                      href="/events?type=corporate"
+                      className="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-emerald-50 text-stone-700 hover:text-emerald-700 text-xs font-bold transition-colors group/item"
+                    >
+                      <span className="flex items-center gap-2">
+                        <Building2 className="w-3.5 h-3.5 text-emerald-500" />
+                        <span>Corporate Gathering Buffets</span>
+                      </span>
+                      <span className="text-[10px] font-black text-emerald-600 bg-emerald-100/80 px-1.5 py-0.5 rounded-md">₹389</span>
+                    </Link>
+                    <Link
+                      href="/events?type=meeting"
+                      className="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-purple-50 text-stone-700 hover:text-purple-700 text-xs font-bold transition-colors group/item"
+                    >
+                      <span className="flex items-center gap-2">
+                        <UtensilsCrossed className="w-3.5 h-3.5 text-purple-500" />
+                        <span>Custom Event Catering</span>
+                      </span>
+                      <span className="text-[10px] font-black text-purple-600 bg-purple-100/80 px-1.5 py-0.5 rounded-md">₹319</span>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <Link
               href="/track"
               className={`flex items-center gap-1 px-2.5 xl:px-3 py-1.5 xl:py-2 rounded-xl text-[11px] xl:text-xs font-extrabold transition-colors whitespace-nowrap ${
@@ -141,6 +222,18 @@ export default function Navbar() {
             >
               <CalendarCheck className="w-3.5 h-3.5 text-stone-400 shrink-0" />
               <span>Subscriptions</span>
+            </Link>
+
+            <Link
+              href="/contact"
+              className={`flex items-center gap-1 px-2.5 xl:px-3 py-1.5 xl:py-2 rounded-xl text-[11px] xl:text-xs font-extrabold transition-colors whitespace-nowrap ${
+                pathname === '/contact'
+                  ? 'text-orange-600 bg-orange-50 border border-orange-200 shadow-2xs'
+                  : 'text-stone-700 hover:text-orange-600 hover:bg-stone-50'
+              }`}
+            >
+              <MessageSquare className="w-3.5 h-3.5 text-orange-500 shrink-0" />
+              <span>Contact & Inquiries</span>
             </Link>
           </nav>
 
@@ -226,6 +319,20 @@ export default function Navbar() {
                         <ShieldCheck className="w-3.5 h-3.5 text-blue-600" />
                         <span>Admin Console</span>
                       </Link>
+                      <Link
+                        href="/events"
+                        className="flex items-center gap-2 px-4 py-2 text-emerald-700 font-bold hover:bg-emerald-50"
+                      >
+                        <PartyPopper className="w-3.5 h-3.5 text-emerald-600" />
+                        <span>Events & Catering</span>
+                      </Link>
+                      <Link
+                        href="/contact"
+                        className="flex items-center gap-2 px-4 py-2 text-orange-600 font-bold hover:bg-orange-50"
+                      >
+                        <MessageSquare className="w-3.5 h-3.5 text-orange-600" />
+                        <span>Contact & Inquiries</span>
+                      </Link>
                     </div>
 
                     <div className="pt-1 border-t border-stone-100">
@@ -253,14 +360,14 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Quick Action Strip (Local Kitchens, PG Mess, Admin, Tracking) */}
+      {/* Mobile Quick Action Strip (Local Kitchens, PG Mess, Events, Admin, Tracking, Contact) */}
       <div className="flex lg:hidden items-center justify-between gap-1.5 px-3 py-1.5 bg-stone-50/95 border-t border-stone-100 overflow-x-auto scrollbar-none text-xs">
         <Link
           href="/explore"
           className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-white border border-stone-200 text-stone-800 font-extrabold text-[11px] shrink-0 active:scale-95 transition-all shadow-2xs"
         >
           <ChefHat className="w-3.5 h-3.5 text-orange-600" />
-          <span>Local Kitchens</span>
+          <span>Kitchens</span>
         </Link>
         <Link
           href="/passes"
@@ -271,11 +378,25 @@ export default function Navbar() {
           <span className="px-1 py-0.2 rounded bg-amber-200 text-amber-950 font-black text-[9px]">₹84</span>
         </Link>
         <Link
+          href="/events"
+          className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-900 font-extrabold text-[11px] shrink-0 active:scale-95 transition-all shadow-2xs"
+        >
+          <PartyPopper className="w-3.5 h-3.5 text-emerald-600" />
+          <span>Catering</span>
+        </Link>
+        <Link
           href="/track"
           className="flex items-center gap-1 px-2 py-1 rounded-xl bg-white border border-stone-200 text-stone-800 font-extrabold text-[11px] shrink-0 active:scale-95 transition-all shadow-2xs"
         >
           <Bike className="w-3.5 h-3.5 text-orange-600" />
           <span>Track</span>
+        </Link>
+        <Link
+          href="/contact"
+          className="flex items-center gap-1 px-2 py-1 rounded-xl bg-white border border-orange-200 text-orange-700 font-extrabold text-[11px] shrink-0 active:scale-95 transition-all shadow-2xs"
+        >
+          <MessageSquare className="w-3.5 h-3.5 text-orange-600" />
+          <span>Inquiry</span>
         </Link>
         <Link
           href="/admin"

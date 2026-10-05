@@ -65,6 +65,11 @@ export default function Footer() {
                   Daily Packaging & QR Labels
                 </Link>
               </li>
+              <li>
+                <Link href="/contact" className="hover:text-amber-400 font-semibold text-amber-500/90 transition-colors">
+                  Join as Home Chef Partner →
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -75,6 +80,12 @@ export default function Footer() {
               <h4 className="text-xs font-black uppercase tracking-wider">Portals & Hubs</h4>
             </div>
             <ul className="space-y-2 text-xs text-stone-400">
+              <li>
+                <Link href="/contact" className="text-orange-400 font-bold hover:text-orange-300 transition-colors flex items-center gap-1">
+                  <span>Contact Us & Inquiry Desk</span>
+                  <span>→</span>
+                </Link>
+              </li>
               <li>
                 <Link href="/admin" className="hover:text-blue-400 transition-colors font-medium">
                   Platform Admin Console
@@ -96,8 +107,8 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/admin" className="hover:text-blue-400 transition-colors font-medium">
-                  Kitchen Verification Audit
+                <Link href="/contact" className="hover:text-blue-400 transition-colors font-medium">
+                  Corporate Partnership RFP
                 </Link>
               </li>
             </ul>
@@ -166,8 +177,8 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/events?type=meeting" className="hover:text-emerald-400 transition-colors font-medium">
-                  Custom Event Catering
+                <Link href="/events?type=meeting" className="hover:text-emerald-400 font-semibold text-emerald-400/90 transition-colors">
+                  Custom Event Catering →
                 </Link>
               </li>
             </ul>
