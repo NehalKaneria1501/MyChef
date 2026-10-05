@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { useApp } from '@/context/AppContext';
 import { 
   ShieldCheck, 
+  Settings as SettingsIcon, 
   Users, 
   ChefHat, 
   DollarSign, 
@@ -436,6 +438,13 @@ export default function AdminDashboardPage() {
             <LifeBuoy className="w-3.5 h-3.5 text-amber-400" />
             <span>Support Desk ({tickets.filter(t => t.status !== 'Resolved').length})</span>
           </button>
+          <Link
+            href="/admin/settings"
+            className="px-3 py-1.5 rounded-xl bg-stone-700/90 hover:bg-stone-600 text-amber-300 hover:text-white border border-stone-600 transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 shadow-2xs"
+          >
+            <SettingsIcon className="w-3.5 h-3.5 text-amber-400" />
+            <span>Settings</span>
+          </Link>
         </div>
       </div>
 

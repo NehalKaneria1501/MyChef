@@ -35,8 +35,11 @@ import {
   PartyPopper,
   Award,
   Briefcase,
-  UtensilsCrossed
+  UtensilsCrossed,
+  Globe2
 } from 'lucide-react';
+import DishesImageSlider from '@/components/DishesImageSlider';
+import DeliverySlotsWidget from '@/components/DeliverySlotsWidget';
 
 export default function HomePage() {
   const router = useRouter();
@@ -48,13 +51,14 @@ export default function HomePage() {
 
   // Quick Food Categories (Swiggy / Zomato / Zepto style)
   const categories = [
-    { id: 'all', name: 'All Cravings', icon: '🍽️', count: '12+ Menus' },
+    { id: 'all', name: 'All Cravings', icon: '🍽️', count: '14+ Menus' },
+    { id: 'afro-veg', name: 'African Veg', icon: '🌍', count: 'Shiro, Jollof & Injera' },
     { id: 'thali', name: 'Ghar Ki Thali', icon: '🍛', count: 'Standard & Deluxe' },
     { id: 'bowls', name: 'Healthy Bowls', icon: '🥗', count: 'Low Calorie' },
     { id: 'jain', name: 'Pure Jain', icon: '🌿', count: 'No Onion-Garlic' },
     { id: 'south', name: 'South Meals', icon: '🥥', count: 'Rice & Sambar' },
     { id: 'diet', name: 'Millet & Keto', icon: '🥑', count: 'High Protein' },
-    { id: 'dessert', name: 'Sweet Treats', icon: 'Gulab Jamun' },
+    { id: 'dessert', name: 'Sweet Treats', icon: '🍯', count: 'Gulab Jamun' },
   ];
 
   // Quick Commerce Add-on Extras (Blinkit / Zepto / Instamart style)
@@ -167,6 +171,32 @@ export default function HomePage() {
       image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80',
       description: 'Homestyle light arhar dal with heeng-jeera tadka, crisp cumin potatoes, fresh curd and soft handmade rotis.',
       providerId: 'prov-1'
+    },
+    {
+      id: 'dish-afro-1',
+      name: 'Ethiopian Shiro & Misir Wat with Teff Injera',
+      kitchen: 'Kilimanjaro Afro-Veg Kitchen',
+      rating: 4.95,
+      reviews: 310,
+      price: 134,
+      badge: 'Pan-African Heritage',
+      diet: 'African Veg',
+      image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80',
+      description: 'Slow-simmered chickpea Shiro Wat, berbere spicy red lentils, collard gomen & 3 rolls of authentic sourdough teff injera.',
+      providerId: 'prov-5'
+    },
+    {
+      id: 'dish-afro-2',
+      name: 'West African Smoky Jollof & Kelewele',
+      kitchen: 'Kilimanjaro Afro-Veg Kitchen',
+      rating: 4.9,
+      reviews: 245,
+      price: 139,
+      badge: 'Party Jollof Feast',
+      diet: 'African Veg',
+      image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80',
+      description: 'Smoky party tomato-bell pepper Jollof rice, golden fried spiced plantains (kelewele), egusi melon spinach stew & stewed beans.',
+      providerId: 'prov-5'
     }
   ];
 
@@ -209,13 +239,22 @@ export default function HomePage() {
   const filteredProviders = providers.filter((p: { servicePincodes: string | any[]; dietary: string | string[]; name: string; cuisine: string[]; }) => {
     const servesPin = p.servicePincodes.includes(pincode);
     const vegMatch = vegOnly ? p.dietary.includes('pure-veg') || p.dietary.includes('jain') : true;
+    const categoryMatch = selectedCategory === 'all'
+      ? true
+      : selectedCategory === 'afro-veg'
+      ? p.cuisine.some(c => c.toLowerCase().includes('african') || c.toLowerCase().includes('ethiopian') || c.toLowerCase().includes('moroccan'))
+      : selectedCategory === 'jain'
+      ? p.dietary.includes('jain')
+      : selectedCategory === 'south'
+      ? p.cuisine.some(c => c.toLowerCase().includes('south'))
+      : true;
     const searchMatch = searchQuery.trim() === ''
       ? true
       : p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       p.cuisine.some((c: string) => {
         return c.toLowerCase().includes(searchQuery.toLowerCase());
       });
-    return vegMatch && searchMatch;
+    return vegMatch && categoryMatch && searchMatch;
   });
 
   return (
@@ -246,15 +285,15 @@ export default function HomePage() {
 
             <div className="lg:col-span-7 space-y-4">
 
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/20 border border-orange-500/40 text-orange-300 text-xs font-bold">
-                <Timer className="w-3.5 h-3.5 text-orange-400" />
-                <span>Next Slot Dispatches by 12:15 PM</span>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-xs font-bold">
+                <Globe2 className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Featuring African Vegetarian & Regional Indian Menus</span>
               </div>
 
               <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
-                Authentic Homestyle Food, <br />
+                Authentic Regional Dishes & <br />
                 <span className="text-transparent bg-clip-text bg-linear-to-r from-orange-400 via-amber-300 to-yellow-400">
-                  Delivered on Daily Loop.
+                  Homestyle Food On Daily Loop.
                 </span>
               </h1>
 
@@ -328,43 +367,19 @@ export default function HomePage() {
 
             </div>
 
-            {/* Banner Right Feature Box */}
+            {/* Banner Right: Interactive Regional Dishes Image Slider */}
             <div className="lg:col-span-5 relative">
-              <div className="relative rounded-2xl overflow-hidden bg-white/10 backdrop-blur-md p-3.5 border border-white/20 shadow-2xl">
-                <div className="relative h-60 w-full rounded-xl overflow-hidden mb-3">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src="https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?auto=format&fit=crop&w=700&q=80"
-                    alt="Delicious Homestyle Thali"
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider shadow-md">
-                    Trending #1 in {pincode}
-                  </div>
-                  <div className="absolute bottom-3 left-3 right-3 bg-black/70 backdrop-blur-md p-2.5 rounded-xl flex items-center justify-between text-xs">
-                    <div>
-                      <h4 className="font-extrabold text-white">Maa Ki Rasoi (HSR)</h4>
-                      <p className="text-[11px] text-stone-300">Ghar Ki Thali • Paneer Bhurji & Yellow Dal</p>
-                    </div>
-                    <span className="font-black text-amber-400 text-sm">₹123/meal</span>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between text-xs px-1">
-                  <span className="text-stone-300">Slot: 12:15 PM - 1:30 PM</span>
-                  <Link
-                    href="/provider/prov-1"
-                    className="px-3.5 py-1.5 btn-animated-primary text-white font-extrabold text-xs rounded-xl shadow-xs transition-all cursor-pointer"
-                  >
-                    Subscribe Today
-                  </Link>
-                </div>
-              </div>
+              <DishesImageSlider />
             </div>
 
           </div>
 
         </div>
+      </section>
+
+      {/* 2.5 DAILY MEAL DELIVERY DISPATCH SLOTS */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <DeliverySlotsWidget />
       </section>
 
       {/* 3. "WHAT'S ON YOUR MIND?" CATEGORY CIRCLES (SWIGGY / ZOMATO STYLE) */}
