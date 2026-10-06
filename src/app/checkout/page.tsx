@@ -23,6 +23,7 @@ import {
   trackPurchase, 
   EcommerceItem 
 } from '@/lib/analytics';
+import { loadRazorpayScript } from '@/lib/razorpay';
 
 
 interface RazorpayResponse {
@@ -77,15 +78,9 @@ export default function CheckoutPage() {
   const [newLandmark, setNewLandmark] = useState('');
   const [newPincode, setNewPincode] = useState('560103');
 
-  // Load Razorpay Checkout SDK Script
+  // Pre-load Razorpay Checkout SDK Script
   useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-    script.async = true;
-    document.body.appendChild(script);
-    return () => {
-      document.body.removeChild(script);
-    };
+    loadRazorpayScript();
   }, []);
 
   // GA4 Ecommerce: begin_checkout
@@ -142,6 +137,9 @@ export default function CheckoutPage() {
     };
     trackAddPaymentInfo([item], checkoutPlan.totalPrice, 'Razorpay');
 
+    // Ensure Razorpay SDK is loaded
+    const isLoaded = await loadRazorpayScript();
+
     let orderId: string | undefined = undefined;
 
     try {
@@ -167,19 +165,22 @@ export default function CheckoutPage() {
     }
 
     // If Razorpay SDK is available on window, open the standard Razorpay modal
-    if (typeof window !== 'undefined' && window.Razorpay) {
+    if (typeof window !== 'undefined' && (window.Razorpay || isLoaded)) {
       const options: any = {
         key: razorpayKey,
-        amount: checkoutPlan.totalPrice * 100, // amount in paisa
+        amount: Math.round(checkoutPlan.totalPrice * 100), // amount in paisa
         currency: 'INR',
         name: 'My Chef',
         description: `${checkoutPlan.collection.name} - ${checkoutPlan.planDuration.toUpperCase()}`,
         image: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=200&q=80',
-        order_id: orderId,
         prefill: {
           name: user?.fullName || 'Rohan Verma',
           email: user?.email || 'rohan.verma@example.com',
           contact: user?.phone || '9876543210',
+        },
+        notes: {
+          address: `${activeAddress?.street || ''}, ${activeAddress?.city || ''}`,
+          fulfillment: fulfillmentMode,
         },
         theme: {
           color: '#ea580c', // Orange-600
@@ -194,10 +195,16 @@ export default function CheckoutPage() {
         },
       };
 
+      // Only attach order_id if it's a real server-registered Razorpay order (not a mock starting with order_test_)
+      if (orderId && !orderId.startsWith('order_test_')) {
+        options.order_id = orderId;
+      }
+
       try {
         const rzp = new window.Razorpay(options);
         rzp.on('payment.failed', function (response: RazorpayErrorResponse) {
-          alert(`Payment failed: ${response.error.description}`);
+          console.error('Razorpay payment failed:', response);
+          alert(`Payment failed: ${response?.error?.description || 'Transaction could not be completed'}`);
           setIsProcessing(false);
         });
         rzp.open();
@@ -207,8 +214,7 @@ export default function CheckoutPage() {
       }
     }
 
-
-    // Direct seamless fallback simulation
+    // Direct seamless fallback simulation if Razorpay SDK blocked or network fail
     setTimeout(() => {
       onPaymentComplete(`pay_RPZ_${Math.floor(100000 + Math.random() * 900000)}`);
     }, 1500);
