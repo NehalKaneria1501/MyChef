@@ -3,7 +3,7 @@ import { InquirySubmission } from '@/lib/types';
 import { INITIAL_INQUIRIES } from '@/lib/mockData';
 
 // Server-side in-memory cache for inquiries
-let serverInquiries: InquirySubmission[] = [...INITIAL_INQUIRIES];
+let serverInquiries = [...INITIAL_INQUIRIES];
 
 export async function GET() {
   try {
@@ -64,6 +64,7 @@ export async function POST(req: Request) {
     const inquiryId = id || `${prefix}-${Date.now().toString().slice(-4)}-${randomHex}`;
 
     const newInquiry: InquirySubmission = {
+
       id: inquiryId,
       category,
       fullName: String(fullName).trim(),
