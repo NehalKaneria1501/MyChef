@@ -1,5 +1,6 @@
+import { Provider, Address, Subscription, MembershipPass, LiveOrderTracking, InquirySubmission } from './types';
 
-export const INITIAL_ADDRESSES = [
+export const INITIAL_ADDRESSES: Address[] = [
   {
     id: 'addr-1',
     label: 'Home',
@@ -29,7 +30,7 @@ export const INITIAL_ADDRESSES = [
   },
 ];
 
-export const MEMBERSHIP_PASSES = [
+export const MEMBERSHIP_PASSES: MembershipPass[] = [
   {
     id: 'pass-student',
     title: 'Student Campus Meal Card',
@@ -86,7 +87,7 @@ export const MEMBERSHIP_PASSES = [
   },
 ];
 
-export const INITIAL_PROVIDERS = [
+export const INITIAL_PROVIDERS: Provider[] = [
   {
     id: 'prov-1',
     name: 'Maa Ki Rasoi (North Indian & Shahi)',
@@ -557,7 +558,7 @@ export const INITIAL_PROVIDERS = [
   },
 ];
 
-export const INITIAL_SUBSCRIPTIONS = [
+export const INITIAL_SUBSCRIPTIONS: Subscription[] = [
   {
     id: 'sub-9081',
     providerId: 'prov-1',
@@ -582,7 +583,7 @@ export const INITIAL_SUBSCRIPTIONS = [
   },
 ];
 
-export const MOCK_LIVE_ORDER = {
+export const MOCK_LIVE_ORDER: LiveOrderTracking = {
   id: 'ord-8921',
   orderNumber: 'MYCHEF-ORD-8921',
   kitchenName: 'Maa Ki Rasoi (5-Star Gourmet Kitchen)',
@@ -600,7 +601,7 @@ export const MOCK_LIVE_ORDER = {
   parcelLockerCode: 'LOCKER-BOX-A12',
 };
 
-export const INITIAL_INQUIRIES = [
+export const INITIAL_INQUIRIES: InquirySubmission[] = [
   {
     id: 'INQ-CR-901',
     category: 'corporate',
