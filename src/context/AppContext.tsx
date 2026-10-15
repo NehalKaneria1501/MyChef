@@ -84,9 +84,40 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [activeAddressId, setActiveAddressId] = useState<string>('addr-1');
   const [providers, setProviders] = useState<Provider[]>(INITIAL_PROVIDERS);
   const [subscriptions, setSubscriptions] = useState<Subscription[]>(INITIAL_SUBSCRIPTIONS);
-  const [checkoutPlan, setCheckoutPlan] = useState<CheckoutPlanSelection | null>(null);
+  const [checkoutPlan, setCheckoutPlanState] = useState<CheckoutPlanSelection | null>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('mychef_checkout_plan');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed && parsed.collection && parsed.provider) {
+            return parsed;
+          }
+        }
+      } catch {
+        // ignore storage access errors
+      }
+    }
+    return null;
+  });
   const [liveOrder, setLiveOrder] = useState<LiveOrderTracking>(MOCK_LIVE_ORDER);
   const [inquiries, setInquiries] = useState<InquirySubmission[]>(INITIAL_INQUIRIES);
+
+  const setCheckoutPlan = (plan: CheckoutPlanSelection | null) => {
+    setCheckoutPlanState(plan);
+    if (typeof window !== 'undefined') {
+      try {
+        if (plan) {
+          localStorage.setItem('mychef_checkout_plan', JSON.stringify(plan));
+        } else {
+          localStorage.removeItem('mychef_checkout_plan');
+        }
+      } catch {
+        // ignore storage access errors
+      }
+    }
+  };
+
 
   // Sync role with logged-in user
   useEffect(() => {

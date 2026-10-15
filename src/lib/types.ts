@@ -1,8 +1,47 @@
+export interface RazorpayOptions {
+  key: string;
+  amount: number;
+  currency: string;
+  name: string;
+  description?: string;
+  image?: string;
+  order_id?: string;
+  prefill?: {
+    name?: string;
+    email?: string;
+    contact?: string;
+  };
+  notes?: Record<string, string>;
+  theme?: {
+    color?: string;
+  };
+  handler?: (response: {
+    razorpay_payment_id?: string;
+    razorpay_order_id?: string;
+    razorpay_signature?: string;
+  }) => void;
+  modal?: {
+    ondismiss?: () => void;
+  };
+}
+
+export interface RazorpayInstance {
+  open: () => void;
+  on: (event: string, handler: (response: unknown) => void) => void;
+}
+
+declare global {
+  interface Window {
+    Razorpay?: new (options: RazorpayOptions) => RazorpayInstance;
+  }
+}
+
 export type UserRole = 'consumer' | 'provider' | 'admin';
+
 
 export type OrderFulfillmentMode = 'delivery' | 'takeaway' | 'dinein';
 
-export type KitchenCategory = 'home_chef' | 'student_mess' | 'corporate_canteen' | 'gourmet_dining' | 'parcel_point';
+export type KitchenCategory = 'home_chef' | 'student_mess' | 'corporate_canteen' | 'gourmet_dining' | 'parcel_point' | 'cloud_kitchen';
 
 export type StarRatingTier = '3_star' | '4_star' | '5_star' | '6_star' | '7_star';
 export type StarTier = StarRatingTier;

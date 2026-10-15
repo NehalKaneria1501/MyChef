@@ -3,9 +3,11 @@
  * Key ID: rzp_test_xeVAJ5Jg2C932Q
  */
 
-import crypto from 'crypto';
+export const RAZORPAY_KEY_ID =
+  process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID ||
+  process.env.RAZORPAY_KEY_ID ||
+  'rzp_test_xeVAJ5Jg2C932Q';
 
-export const RAZORPAY_KEY_ID = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_test_xeVAJ5Jg2C932Q';
 export const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || '';
 
 export interface CreateOrderParams {
@@ -16,7 +18,7 @@ export interface CreateOrderParams {
 }
 
 export interface RazorpayOrderResponse {
-  id: string;
+  id: string | null;
   entity: string;
   amount: number;
   amount_paid: number;
@@ -27,11 +29,12 @@ export interface RazorpayOrderResponse {
   attempts: number;
   notes: Record<string, string>;
   created_at: number;
+  isRealOrder?: boolean;
 }
 
 /**
  * Creates an order on Razorpay using their official REST API.
- * If RAZORPAY_KEY_SECRET is not configured yet, it returns a deterministic mock order for testing.
+ * If RAZORPAY_KEY_SECRET is not configured or error occurs, returns null orderId so standard client checkout can open safely.
  */
 export async function createRazorpayOrder({
   amount,
@@ -39,7 +42,7 @@ export async function createRazorpayOrder({
   receipt,
   notes = {},
 }: CreateOrderParams): Promise<RazorpayOrderResponse> {
-  const amountInPaise = Math.round(amount * 100);
+  const amountInPaise = amount < 10000 ? Math.round(amount * 100) : Math.round(amount);
   const orderReceipt = receipt || `rcpt_${Date.now()}`;
 
   if (RAZORPAY_KEY_ID && RAZORPAY_KEY_SECRET) {
@@ -64,16 +67,19 @@ export async function createRazorpayOrder({
         console.warn('Razorpay API error, generating local order context:', errorData);
       } else {
         const orderData = await res.json();
-        return orderData;
+        return {
+          ...orderData,
+          isRealOrder: true,
+        };
       }
     } catch (err) {
       console.warn('Network issue calling Razorpay REST API, generating fallback order:', err);
     }
   }
 
-  // Instant order creation for test key (Standard Razorpay Checkout supports direct client order opening)
+  // Without a validated secret, return null for orderId so client checkout does not fail with invalid order id
   return {
-    id: `order_test_${Date.now().toString(36)}_${Math.random().toString(36).substring(2, 7)}`,
+    id: null,
     entity: 'order',
     amount: amountInPaise,
     amount_paid: 0,
@@ -84,28 +90,34 @@ export async function createRazorpayOrder({
     attempts: 0,
     notes,
     created_at: Math.floor(Date.now() / 1000),
+    isRealOrder: false,
   };
 }
 
 /**
  * Verify Razorpay payment signature
  */
-export function verifyPaymentSignature(
+export async function verifyPaymentSignature(
   orderId: string,
   paymentId: string,
   signature: string
-): boolean {
+): Promise<boolean> {
   if (!RAZORPAY_KEY_SECRET) {
-    // In test mode without secret, return true for valid formats
     return Boolean(paymentId && paymentId.startsWith('pay_'));
   }
 
-  const generatedSignature = crypto
-    .createHmac('sha256', RAZORPAY_KEY_SECRET)
-    .update(`${orderId}|${paymentId}`)
-    .digest('hex');
+  try {
+    const crypto = await import('crypto');
+    const generatedSignature = crypto
+      .createHmac('sha256', RAZORPAY_KEY_SECRET)
+      .update(`${orderId}|${paymentId}`)
+      .digest('hex');
 
-  return generatedSignature === signature;
+    return generatedSignature === signature;
+  } catch (err) {
+    console.error('Signature verification error:', err);
+    return false;
+  }
 }
 
 /**
@@ -113,15 +125,15 @@ export function verifyPaymentSignature(
  */
 export function loadRazorpayScript(): Promise<boolean> {
   if (typeof window === 'undefined') return Promise.resolve(false);
-  if ((window as any).Razorpay) return Promise.resolve(true);
+  if (window.Razorpay) return Promise.resolve(true);
 
   return new Promise((resolve) => {
     const existing = document.getElementById('razorpay-checkout-sdk') as HTMLScriptElement | null;
     if (existing) {
-      if ((window as any).Razorpay) return resolve(true);
+      if (window.Razorpay) return resolve(true);
       existing.addEventListener('load', () => resolve(true));
       existing.addEventListener('error', () => resolve(false));
-      setTimeout(() => resolve(Boolean((window as any).Razorpay)), 1500);
+      setTimeout(() => resolve(Boolean(window.Razorpay)), 1500);
       return;
     }
 
@@ -134,4 +146,3 @@ export function loadRazorpayScript(): Promise<boolean> {
     document.body.appendChild(script);
   });
 }
-

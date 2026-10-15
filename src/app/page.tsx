@@ -209,7 +209,7 @@ export default function HomePage() {
     const prov = providers.find(p => p.id === dish.providerId) || providers[0];
     const collection = prov.mealCollections[0];
     const price = selectedDishDuration === 'weekly' ? 690 : 2288;
-    
+
     setCheckoutPlan({
       provider: prov,
       collection: {
@@ -226,7 +226,7 @@ export default function HomePage() {
   };
 
   const toggleModalAddon = (addon: string) => {
-    setModalAddons(prev => 
+    setModalAddons(prev =>
       prev.includes(addon) ? prev.filter(a => a !== addon) : [...prev, addon]
     );
   };
@@ -242,12 +242,12 @@ export default function HomePage() {
     const categoryMatch = selectedCategory === 'all'
       ? true
       : selectedCategory === 'afro-veg'
-      ? p.cuisine.some(c => c.toLowerCase().includes('african') || c.toLowerCase().includes('ethiopian') || c.toLowerCase().includes('moroccan'))
-      : selectedCategory === 'jain'
-      ? p.dietary.includes('jain')
-      : selectedCategory === 'south'
-      ? p.cuisine.some(c => c.toLowerCase().includes('south'))
-      : true;
+        ? p.cuisine.some(c => c.toLowerCase().includes('african') || c.toLowerCase().includes('ethiopian') || c.toLowerCase().includes('moroccan'))
+        : selectedCategory === 'jain'
+          ? p.dietary.includes('jain')
+          : selectedCategory === 'south'
+            ? p.cuisine.some(c => c.toLowerCase().includes('south'))
+            : true;
     const searchMatch = searchQuery.trim() === ''
       ? true
       : p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -315,7 +315,7 @@ export default function HomePage() {
                     />
                   </div>
                   <Link
-                    href={`/explore?q=${ encodeURIComponent(searchQuery) }`}
+                    href={`/explore?q=${encodeURIComponent(searchQuery)}`}
                     className="px-6 py-2.5 rounded-xl btn-animated-primary text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-orange-600/30 transition-all hover:scale-102 cursor-pointer"
                   >
                     <span>Search</span>
@@ -399,14 +399,14 @@ export default function HomePage() {
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`flex flex-col items-center p-3.5 rounded-2xl shrink-0 transition-all text-center min-w-[105px] border ${ isSelected
-                    ? 'bg-orange-600 text-white border-orange-600 shadow-md shadow-orange-600/20 scale-105'
-                    : 'bg-white hover:bg-orange-50/60 text-stone-800 border-stone-200/80 shadow-xs'
+                className={`flex flex-col items-center p-3.5 rounded-2xl shrink-0 transition-all text-center min-w-[105px] border ${isSelected
+                  ? 'bg-orange-600 text-white border-orange-600 shadow-md shadow-orange-600/20 scale-105'
+                  : 'bg-white hover:bg-orange-50/60 text-stone-800 border-stone-200/80 shadow-xs'
                   }`}
               >
                 <span className="text-2xl mb-1">{cat.icon}</span>
                 <span className="text-xs font-bold whitespace-nowrap">{cat.name}</span>
-                <span className={`text-[10px] mt-0.5 ${ isSelected ? 'text-orange-100' : 'text-stone-400' }`}>
+                <span className={`text-[10px] mt-0.5 ${isSelected ? 'text-orange-100' : 'text-stone-400'}`}>
                   {cat.count}
                 </span>
               </button>
@@ -466,7 +466,7 @@ export default function HomePage() {
                     className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
-                  
+
                   {/* Badge */}
                   <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-xs text-stone-900 text-[10px] font-black px-2.5 py-1 rounded-xl shadow-xs uppercase tracking-wider flex items-center gap-1">
                     <Sparkles className="w-3 h-3 text-amber-500 fill-amber-500" />
@@ -550,9 +550,9 @@ export default function HomePage() {
             {/* Pure Veg Toggle like Swiggy */}
             <button
               onClick={() => setVegOnly(!vegOnly)}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border font-bold transition-all ${ vegOnly
-                  ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs'
-                  : 'bg-stone-50 text-stone-700 border-stone-200 hover:bg-stone-100'
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border font-bold transition-all ${vegOnly
+                ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs'
+                : 'bg-stone-50 text-stone-700 border-stone-200 hover:bg-stone-100'
                 }`}
             >
               <div className="w-3.5 h-3.5 border-2 border-current p-0.5 flex items-center justify-center rounded-xs">
@@ -612,7 +612,7 @@ export default function HomePage() {
                       onClick={(e) => toggleLike(prov.id, e)}
                       className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-stone-700 hover:text-red-500 transition-colors shadow-sm"
                     >
-                      <Heart className={`w-4 h-4 ${ isLiked ? 'fill-red-500 text-red-500' : '' }`} />
+                      <Heart className={`w-4 h-4 ${isLiked ? 'fill-red-500 text-red-500' : ''}`} />
                     </button>
 
                     {/* Swiggy-style Discount Ribbon */}
@@ -676,7 +676,7 @@ export default function HomePage() {
                         {prov.mealCollections.map((col) => (
                           <div key={col.id} className="flex items-center justify-between text-xs bg-orange-50/40 px-2.5 py-1.5 rounded-xl border border-orange-100/60">
                             <div className="flex items-center gap-1.5">
-                              <span className={`w-2 h-2 rounded-full ${ col.dietType === 'pure-veg' || col.dietType === 'jain' ? 'bg-emerald-500' : 'bg-red-500' }`}></span>
+                              <span className={`w-2 h-2 rounded-full ${col.dietType === 'pure-veg' || col.dietType === 'jain' ? 'bg-emerald-500' : 'bg-red-500'}`}></span>
                               <span className="font-bold text-stone-800 text-[11px]">{col.name}</span>
                             </div>
                             <span className="font-extrabold text-orange-600 text-xs">₹{col.monthlyPrice}/mo</span>
@@ -691,7 +691,7 @@ export default function HomePage() {
                 {/* Card CTA */}
                 <div className="p-5 pt-0">
                   <Link
-                    href={`/provider/${ prov.id }`}
+                    href={`/provider/${prov.id}`}
                     className="w-full py-2.5 rounded-2xl btn-animated-primary text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-md transition-all cursor-pointer"
                   >
                     <span>View 7-Day Menu & Subscribe</span>
@@ -751,7 +751,7 @@ export default function HomePage() {
                 </div>
 
                 <button
-                  onClick={() => alert(`Added ${ item.name } to your tiffin bundle!`)}
+                  onClick={() => alert(`Added ${item.name} to your tiffin bundle!`)}
                   className="w-full py-1.5 rounded-xl bg-orange-50 hover:bg-orange-600 hover:text-white text-orange-600 font-extrabold text-xs flex items-center justify-center gap-1 border border-orange-200 transition-colors"
                 >
                   <Plus className="w-3.5 h-3.5" />
@@ -1126,12 +1126,12 @@ export default function HomePage() {
       {/* 8. WOOCOMMERCE RESTAURANT STYLE DISH QUICK VIEW MODAL */}
       {quickViewDish && (
         <div className="fixed inset-0 z-50 bg-stone-950/70 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div 
+          <div
             className="fixed inset-0"
             onClick={() => setQuickViewDish(null)}
           />
           <div className="relative bg-white rounded-3xl max-w-lg w-full overflow-hidden border border-stone-200 shadow-2xl z-10 animate-in zoom-in-95 duration-200 max-h-[92vh] flex flex-col">
-            
+
             {/* Modal Image Header */}
             <div className="relative h-56 w-full shrink-0 bg-stone-100">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -1141,7 +1141,7 @@ export default function HomePage() {
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/30" />
-              
+
               <button
                 onClick={() => setQuickViewDish(null)}
                 className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/50 hover:bg-black/80 text-white flex items-center justify-center cursor-pointer transition-colors backdrop-blur-xs"
@@ -1174,7 +1174,7 @@ export default function HomePage() {
 
             {/* Modal Body - Scrollable */}
             <div className="p-5 space-y-4 overflow-y-auto text-xs">
-              
+
               {/* Macro Nutrition Breakdown */}
               <div className="p-3 bg-stone-50 rounded-2xl border border-stone-200/80 space-y-1.5">
                 <span className="text-[10px] font-extrabold uppercase tracking-wider text-stone-500 block">
@@ -1223,16 +1223,14 @@ export default function HomePage() {
                         key={addon.id}
                         type="button"
                         onClick={() => toggleModalAddon(addon.id)}
-                        className={`w-full p-2.5 rounded-xl border flex items-center justify-between text-left transition-colors cursor-pointer ${
-                          isChecked 
-                            ? 'border-orange-500 bg-orange-50/50 text-orange-950 font-bold' 
+                        className={`w-full p-2.5 rounded-xl border flex items-center justify-between text-left transition-colors cursor-pointer ${isChecked
+                            ? 'border-orange-500 bg-orange-50/50 text-orange-950 font-bold'
                             : 'border-stone-200 bg-stone-50 hover:bg-stone-100/70 text-stone-700'
-                        }`}
+                          }`}
                       >
                         <div className="flex items-center gap-2">
-                          <div className={`w-4 h-4 rounded-md border flex items-center justify-center ${
-                            isChecked ? 'border-orange-600 bg-orange-600 text-white' : 'border-stone-300 bg-white'
-                          }`}>
+                          <div className={`w-4 h-4 rounded-md border flex items-center justify-center ${isChecked ? 'border-orange-600 bg-orange-600 text-white' : 'border-stone-300 bg-white'
+                            }`}>
                             {isChecked && <Check className="w-3 h-3" />}
                           </div>
                           <span className="text-xs">{addon.name}</span>
@@ -1251,11 +1249,10 @@ export default function HomePage() {
                   <button
                     type="button"
                     onClick={() => setSelectedDishDuration('weekly')}
-                    className={`p-3 rounded-2xl border text-center transition-all cursor-pointer ${
-                      selectedDishDuration === 'weekly'
+                    className={`p-3 rounded-2xl border text-center transition-all cursor-pointer ${selectedDishDuration === 'weekly'
                         ? 'border-orange-600 bg-orange-50 text-orange-950 font-bold shadow-2xs'
                         : 'border-stone-200 text-stone-600 hover:bg-stone-50'
-                    }`}
+                      }`}
                   >
                     <span className="block text-xs">Weekly Flex Pass</span>
                     <span className="block font-black text-sm text-stone-900 mt-0.5">₹690</span>
@@ -1265,11 +1262,10 @@ export default function HomePage() {
                   <button
                     type="button"
                     onClick={() => setSelectedDishDuration('monthly')}
-                    className={`p-3 rounded-2xl border text-center transition-all cursor-pointer relative ${
-                      selectedDishDuration === 'monthly'
+                    className={`p-3 rounded-2xl border text-center transition-all cursor-pointer relative ${selectedDishDuration === 'monthly'
                         ? 'border-orange-600 bg-orange-50 text-orange-950 font-bold shadow-2xs'
                         : 'border-stone-200 text-stone-600 hover:bg-stone-50'
-                    }`}
+                      }`}
                   >
                     <span className="absolute -top-2 right-3 bg-emerald-600 text-white text-[9px] font-black uppercase px-2 py-0.5 rounded-full">
                       SAVE 24%
