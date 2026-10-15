@@ -51,7 +51,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const prefixMap: Record<string, string> = {
+    const prefixMap = {
       corporate: 'INQ-CORP',
       student_mess: 'INQ-MESS',
       chef_partner: 'INQ-CHEF',
@@ -59,14 +59,13 @@ export async function POST(req: Request) {
       customer_care: 'INQ-CARE',
       other: 'INQ-GEN',
     };
-    const prefix = prefixMap[category] || 'INQ-REF';
+    const prefix = (prefixMap as Record<string, string>)[category] || 'INQ-REF';
     const randomHex = Math.random().toString(36).substring(2, 6).toUpperCase();
     const inquiryId = id || `${prefix}-${Date.now().toString().slice(-4)}-${randomHex}`;
 
-    const newInquiry: InquirySubmission = {
-
+    const newInquiry = {
       id: inquiryId,
-      category,
+      category: category as InquirySubmission['category'],
       fullName: String(fullName).trim(),
       email: String(email).trim().toLowerCase(),
       phone: String(phone).trim(),
@@ -78,7 +77,7 @@ export async function POST(req: Request) {
       startDate: startDate ? String(startDate) : undefined,
       subject: subject ? String(subject).trim() : `New ${category} inquiry from ${fullName}`,
       message: message ? String(message).trim() : '',
-      status: 'new',
+      status: 'new' as const,
       createdAt: new Date().toISOString(),
     };
 
