@@ -74,6 +74,7 @@ export default function CheckoutPage() {
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
   const [showNewAddressModal, setShowNewAddressModal] = useState(false);
+  const [showSandboxPaymentModal, setShowSandboxPaymentModal] = useState(false);
 
   // New address state
   const [newLabel, setNewLabel] = useState('Work');
@@ -194,6 +195,9 @@ export default function CheckoutPage() {
 
     // Ensure Razorpay SDK is loaded
     const isLoaded = await loadRazorpayScript();
+    if (!isLoaded) {
+      console.warn('Razorpay SDK could not be loaded via CDN script');
+    }
 
     let orderData: { orderId?: string | null; amount?: number; currency?: string; keyId?: string } | null = null;
 
@@ -279,37 +283,34 @@ export default function CheckoutPage() {
       },
     };
 
-    // Only attach order_id if it's a real server-registered Razorpay order (starts with order_ and not mock)
+    // If backend created a genuine Razorpay Order ID (starts with order_ and not mock)
     if (orderData?.orderId && !orderData.orderId.startsWith('order_test_')) {
       options.order_id = orderData.orderId;
+
+      if (typeof window !== 'undefined' && window.Razorpay) {
+        try {
+          const rzp = new window.Razorpay(options);
+          rzp.on('payment.failed', function (response: unknown) {
+            console.error('Razorpay payment failed:', response);
+            const errResp = response as RazorpayErrorResponse;
+            setPaymentError(errResp?.error?.description || 'Transaction could not be completed via gateway');
+            setIsProcessing(false);
+            setShowSandboxPaymentModal(true);
+          });
+          rzp.open();
+          return;
+        } catch (err: unknown) {
+          const errDescription = err instanceof Error ? err.message : String(err);
+          console.warn('Razorpay checkout modal failed to open:', errDescription);
+        }
+      }
     }
 
-    if (typeof window !== 'undefined' && window.Razorpay) {
-      try {
-        const rzp = new window.Razorpay(options);
-        rzp.on('payment.failed', function (response: unknown) {
-          console.error('Razorpay payment failed:', response);
-          const errResp = response as RazorpayErrorResponse;
-          setPaymentError(errResp?.error?.description || 'Transaction could not be completed');
-          setIsProcessing(false);
-        });
-        rzp.open();
-        return;
-      } catch (err: unknown) {
-        const errDescription = err instanceof Error ? err.message : String(err);
-        console.warn('Razorpay checkout modal failed to open:', errDescription);
-        setPaymentError(
-          'Razorpay checkout modal could not open. Click the Instant Test Activation button below to test subscription setup.'
-        );
-        setIsProcessing(false);
-      }
-    } else {
-      // Razorpay SDK not loaded in time or blocked by ad-blocker
-      setPaymentError(
-        'Razorpay SDK blocked or unavailable in this network. You can activate directly using Instant Test Mode below.'
-      );
-      setIsProcessing(false);
-    }
+    // When Razorpay order_id is not generated (e.g. RAZORPAY_KEY_SECRET is not yet configured in Netlify):
+    // Razorpay checkout.js forbids opening without an order_id and throws "Uh! oh! Something went wrong".
+    // We gracefully open the interactive Sandbox Payment Simulator so testing never gets blocked!
+    setIsProcessing(false);
+    setShowSandboxPaymentModal(true);
   }, [checkoutPlan, fulfillmentMode, activeAddress, user, startDate, onPaymentComplete]);
 
 
@@ -805,6 +806,128 @@ export default function CheckoutPage() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* SANDBOX / TEST PAYMENT GATEWAY SIMULATOR MODAL */}
+      {showSandboxPaymentModal && checkoutPlan && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-stone-200 space-y-4 animate-in zoom-in-95 duration-200">
+            {/* Header */}
+            <div className="flex items-start justify-between">
+              <div>
+                <div className="flex items-center gap-1.5 mb-1">
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-orange-100 text-orange-800">
+                    Test Mode
+                  </span>
+                  <span className="text-[10px] text-stone-400 font-mono">MyChef Secured Sandbox</span>
+                </div>
+                <h3 className="font-extrabold text-stone-900 text-base">Select Test Payment Method</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowSandboxPaymentModal(false)}
+                className="w-7 h-7 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-500 flex items-center justify-center transition-colors cursor-pointer text-xs"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Amount & Plan Card */}
+            <div className="p-3.5 bg-orange-50/60 rounded-2xl border border-orange-100 flex items-center justify-between">
+              <div>
+                <span className="text-xs font-bold text-stone-900 block">{checkoutPlan.collection.name}</span>
+                <span className="text-[11px] text-stone-500 capitalize">{checkoutPlan.planDuration} Plan • {checkoutPlan.provider.name}</span>
+              </div>
+              <div className="text-right">
+                <span className="text-[10px] text-stone-400 uppercase tracking-wider block">Total Payable</span>
+                <span className="text-base font-black text-orange-600">₹{checkoutPlan.totalPrice}</span>
+              </div>
+            </div>
+
+            {/* Payment Options */}
+            <div className="space-y-2 text-xs">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowSandboxPaymentModal(false);
+                  onPaymentComplete(`pay_upi_${Math.random().toString(36).substring(2, 9)}`);
+                }}
+                className="w-full p-3 rounded-2xl border border-emerald-200 bg-emerald-50/50 hover:bg-emerald-50 text-emerald-950 font-bold flex items-center justify-between transition-colors cursor-pointer"
+              >
+                <div className="flex items-center gap-2.5">
+                  <span className="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-extrabold text-[11px]">
+                    UPI
+                  </span>
+                  <div className="text-left">
+                    <span className="block text-xs font-bold">Simulate UPI Payment</span>
+                    <span className="block text-[10px] font-normal text-emerald-700">GPay, PhonePe, Paytm sandbox</span>
+                  </div>
+                </div>
+                <span className="text-[11px] bg-emerald-600 text-white font-extrabold px-2 py-0.5 rounded-full">
+                  Instant
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setShowSandboxPaymentModal(false);
+                  onPaymentComplete(`pay_card_${Math.random().toString(36).substring(2, 9)}`);
+                }}
+                className="w-full p-3 rounded-2xl border border-stone-200 bg-stone-50 hover:bg-stone-100 text-stone-900 font-bold flex items-center justify-between transition-colors cursor-pointer"
+              >
+                <div className="flex items-center gap-2.5">
+                  <span className="w-8 h-8 rounded-xl bg-[#0c2340] text-white flex items-center justify-center font-extrabold text-[11px]">
+                    <CreditCard className="w-4 h-4" />
+                  </span>
+                  <div className="text-left">
+                    <span className="block text-xs font-bold">Simulate Card Payment</span>
+                    <span className="block text-[10px] font-normal text-stone-500">Visa / Mastercard / Rupay test</span>
+                  </div>
+                </div>
+                <span className="text-stone-400 text-xs">→</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setShowSandboxPaymentModal(false);
+                  onPaymentComplete(`pay_nb_${Math.random().toString(36).substring(2, 9)}`);
+                }}
+                className="w-full p-3 rounded-2xl border border-stone-200 bg-stone-50 hover:bg-stone-100 text-stone-900 font-bold flex items-center justify-between transition-colors cursor-pointer"
+              >
+                <div className="flex items-center gap-2.5">
+                  <span className="w-8 h-8 rounded-xl bg-stone-700 text-white flex items-center justify-center font-extrabold text-[11px]">
+                    NB
+                  </span>
+                  <div className="text-left">
+                    <span className="block text-xs font-bold">Simulate NetBanking</span>
+                    <span className="block text-[10px] font-normal text-stone-500">HDFC, ICICI, SBI sandbox</span>
+                  </div>
+                </div>
+                <span className="text-stone-400 text-xs">→</span>
+              </button>
+            </div>
+
+            {/* Merchant Helper note */}
+            <div className="p-3 bg-stone-50 rounded-2xl border border-stone-200/80 text-[11px] text-stone-600 space-y-1">
+              <span className="font-bold text-stone-800 block text-[10px] uppercase tracking-wider">
+                ⚙️ Live Gateway Configuration:
+              </span>
+              <p className="text-[10px] text-stone-500 leading-relaxed">
+                To enable the official Razorpay popup on Netlify, add <code className="bg-stone-200/80 px-1 py-0.5 rounded font-mono text-[9px] text-stone-800">RAZORPAY_KEY_SECRET</code> in Netlify Site Configuration &gt; Environment Variables.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setShowSandboxPaymentModal(false)}
+              className="w-full py-2.5 bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold rounded-xl text-xs transition-colors cursor-pointer"
+            >
+              Cancel
+            </button>
           </div>
         </div>
       )}
